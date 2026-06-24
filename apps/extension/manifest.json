@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "VidForge AI",
+  "version": "1.0.0",
+  "description": "Tiện ích mở rộng tương tác với trình duyệt và kết nối VidForge AI",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "VidForge AI"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "http://vidforge-ai.duckdns.org/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
