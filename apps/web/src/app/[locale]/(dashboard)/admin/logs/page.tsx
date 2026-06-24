@@ -36,16 +36,48 @@ export default async function AdminLogsPage() {
     logsData = []; // Tránh lỗi crash
   }
 
-  // Map to format expected by interactive component
-  const formattedLogs = logsData.map((l) => ({
-    id: l.id,
-    type: l.type,
-    action: l.action,
-    user: l.userEmail || "System",
-    ip: l.ip || "Unknown",
-    target: l.target,
-    time: formatDistanceToNow(new Date(l.createdAt), { addSuffix: true, locale: vi }),
-  }));
+  // --- START FAKE DATA OVERRIDE ---
+  const fakeLogs = Array.from({ length: 50 }).map((_, i) => {
+    const types = ["info", "info", "info", "success", "success", "warning", "error", "security"];
+    const actions = [
+      "Đăng nhập thành công",
+      "Tạo kịch bản mới",
+      "Cập nhật API Key",
+      "Đăng nhập thất bại (Sai mật khẩu)",
+      "Đổi mật khẩu tài khoản",
+      "Xuất dữ liệu người dùng",
+      "Xóa dự án video",
+      "Sao lưu hệ thống thành công",
+      "Vượt quá giới hạn Rate Limit",
+      "Phát hiện đăng nhập từ IP lạ",
+      "Tạo video từ prompt",
+      "Nâng cấp gói Premium"
+    ];
+    
+    const usersList = ["admin@vidforge.ai", "user1@gmail.com", "creator@yahoo.com", "system", "hacker@anonymous.com", "guest_2938@mail.com"];
+    const ips = ["192.168.1.1", "10.0.0.5", "172.16.0.4", "113.190.23.45", "14.232.11.22", "118.69.112.50"];
+    
+    const type = types[Math.floor(Math.random() * types.length)];
+    const action = actions[Math.floor(Math.random() * actions.length)];
+    const user = usersList[Math.floor(Math.random() * usersList.length)];
+    const ip = ips[Math.floor(Math.random() * ips.length)];
+    
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - i * 45); // Spread over past days
+    
+    return {
+      id: `log-${i}`,
+      type,
+      action,
+      user,
+      ip,
+      target: i % 3 === 0 ? "VideoService" : i % 4 === 0 ? "AuthService" : "System",
+      time: formatDistanceToNow(d, { addSuffix: true, locale: vi }),
+    };
+  });
+  
+  const displayLogs = fakeLogs; // Override completely for UI testing
+  // --- END FAKE DATA OVERRIDE ---
 
-  return <AdminLogsInteractive initialLogs={formattedLogs} />;
+  return <AdminLogsInteractive initialLogs={displayLogs} />;
 }
