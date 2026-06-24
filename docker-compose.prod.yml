@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: vidforge_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: vidforge
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    image: vidforge-web
+    container_name: vidforge_web
+    restart: always
+    expose:
+      - "3000"
+    environment:
+      - DATABASE_URL=postgres://postgres:password@db:5432/vidforge
+      - HOSTNAME=0.0.0.0
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: vidforge_caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:

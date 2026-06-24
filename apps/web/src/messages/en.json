@@ -1,0 +1,136 @@
+{
+  "HomePage": {
+    "nav": {
+      "home": "Home",
+      "howItWorks": "How it works",
+      "features": "Features",
+      "use_cases": "Use Cases",
+      "about": "About",
+      "contact": "Contact",
+      "login": "Login",
+      "start": "Get Started",
+      "vi": "Tiếng Việt",
+      "en": "English",
+      "switchToAdmin": "Switch to Admin Interface",
+      "switchToUser": "Switch to User Interface"
+    },
+    "hero": {
+      "badge": "Your Ultimate Content Creation AI",
+      "title_1": "Scripts & Images",
+      "title_2": "Perfect for Videos",
+      "desc": "Simply input text, get detailed scripts and hyper-realistic images instantly. VidForge provides the perfect raw materials to help you produce amazing videos effortlessly.",
+      "cta": "Generate Content",
+      "gallery": "View Gallery",
+      "prompt": "/prompt: Write a script and draw a cyberpunk city at night..."
+    },
+    "features": {
+      "title": "Unleash the Power",
+      "desc": "Everything you need to automate your content preparation workflow.",
+      "list": [
+        {
+          "title": "100% Automated",
+          "desc": "Automatically run multiple accounts simultaneously to generate massive amounts of scripts and images, saving you endless hours."
+        },
+        {
+          "title": "Smart Creation",
+          "desc": "Generate ideas, write scripts, and draw hyper-realistic scenes using top-tier AI at a fraction of the cost."
+        },
+        {
+          "title": "Team Management",
+          "desc": "Optimized for studios and businesses. Easily divide workspaces, manage staff, and keep data secure."
+        }
+      ]
+    },
+    "howItWorks": {
+      "title": "3 Simple Steps",
+      "desc": "Preparing video materials has never been easier.",
+      "steps": [
+        {
+          "title": "Input Idea",
+          "desc": "Just write a few sentences describing the scene, characters, or the video content you desire."
+        },
+        {
+          "title": "AI Processing",
+          "desc": "Our system automatically crafts detailed scripts and draws high-quality image frames."
+        },
+        {
+          "title": "Get Materials",
+          "desc": "Download your complete set of scripts and stunning images, ready to be edited into your final video."
+        }
+      ]
+    },
+    "bottomCta": {
+      "title": "Ready to Start?",
+      "desc": "Join thousands of creators revolutionizing content creation with VidForge.AI.",
+      "button": "Sign Up for Free"
+    },
+    "footer": {
+      "desc": "The leading automated AI platform for generating scripts and images.",
+      "product": "Product",
+      "resources": "Resources",
+      "company": "Company",
+      "legal": "Legal",
+      "rights": "All rights reserved by VidForge AI."
+    },
+    "about": {
+      "title": "About Us",
+      "subtitle": "Unleash your creative potential with Artificial Intelligence.",
+      "mission_title": "Our Mission",
+      "mission_desc": "At VidForge.AI, our mission is to democratize the video pre-production process. We believe that great ideas shouldn't be limited by budget or technical skills. By leveraging state-of-the-art Generative AI models, we are turning simple text prompts into detailed scripts and hyper-realistic image frames.",
+      "tech_title": "Core Technology",
+      "tech_desc": "Our platform is built on a robust, secure architecture that allows businesses to manage multiple accounts independently. Powered by the industry's best LLMs and image generation models (like GPT-4 and Midjourney API), VidForge guarantees outstanding quality for your video raw materials.",
+      "vision_title": "Future Vision",
+      "vision_desc": "We are building more than just a tool; we are building a creative ecosystem. In the future, VidForge AI will expand our automation pipelines to handle every step of brainstorming and visual design before the final video edit."
+    }
+  },
+  "LoginPage": {
+    "title": "Welcome Back",
+    "subtitle": "Log in to your account to continue.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "Enter your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot password?",
+    "loginButton": "Log In",
+    "orContinueWith": "Or continue with",
+    "googleButton": "Sign in with Google",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up"
+  },
+  "RegisterPage": {
+    "title": "Create Account",
+    "nameLabel": "Name",
+    "namePlaceholder": "Enter your name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Create a password",
+    "registerButton": "Sign Up",
+    "orContinueWith": "Or continue with",
+    "googleButton": "Continue with Google",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign In",
+    "alertMessage": "This demo only supports Google Login currently. Click 'Continue with Google' to register/login automatically.",
+    "brandName": "VidForge.AI",
+    "sloganHighlight": "Revolution",
+    "sloganFull": "Join the Revolution",
+    "description": "Sign up today and start creating magical videos powered by AI."
+  },
+  "Sidebar": {
+    "userMenu": "User Menu",
+    "adminMenu": "Admin Menu",
+    "dashboard": "Dashboard",
+    "projects": "Script Projects",
+    "generate": "Creative Studio",
+    "library": "Content Library",
+    "prompts": "Prompt Management",
+    "processing": "Image Tools",
+    "settings": "Settings & Profile",
+    "adminDashboard": "Statistics",
+    "adminUsers": "User Management",
+    "adminContent": "Global Scripts",
+    "adminLogs": "System Logs",
+    "adminConfig": "System Config",
+    "logout": "Sign out"
+  }
+}

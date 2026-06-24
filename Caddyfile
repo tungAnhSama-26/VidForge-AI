@@ -1,0 +1,3 @@
+vidforge-ai.duckdns.org {
+    reverse_proxy web:3000
+}

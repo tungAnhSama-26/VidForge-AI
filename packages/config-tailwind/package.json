@@ -1,0 +1,9 @@
+{
+  "name": "@vidforge/config-tailwind",
+  "version": "0.1.0",
+  "private": true,
+  "main": "tailwind.config.ts",
+  "dependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

@@ -1,0 +1,10 @@
+# Ignore configuration JS files from GitHub language statistics
+*.mjs linguist-language=TypeScript
+*.js linguist-language=TypeScript
+
+# Ignore Dockerfile from dominating the repo percentage
+Dockerfile linguist-detectable=false
+
+# Ignore shell scripts
+*.ps1 linguist-vendored
+*.sh linguist-vendored

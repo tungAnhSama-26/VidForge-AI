@@ -1,0 +1,136 @@
+{
+  "HomePage": {
+    "nav": {
+      "home": "Trang chủ",
+      "howItWorks": "Quy trình",
+      "features": "Tính năng",
+      "use_cases": "Ứng dụng",
+      "about": "Giới thiệu",
+      "contact": "Liên hệ",
+      "login": "Đăng nhập",
+      "start": "Bắt đầu ngay",
+      "vi": "Tiếng Việt",
+      "en": "English",
+      "switchToAdmin": "Chuyển sang giao diện quản lý",
+      "switchToUser": "Chuyển sang giao diện người dùng"
+    },
+    "hero": {
+      "badge": "Trợ lý AI chắp cánh ý tưởng nội dung",
+      "title_1": "Kịch Bản & Hình Ảnh",
+      "title_2": "Hoàn Hảo Cho Video",
+      "desc": "Chỉ cần nhập văn bản, nhận ngay kịch bản chi tiết và hình ảnh bối cảnh siêu thực. VidForge cung cấp trọn bộ nguyên liệu đỉnh cao để bạn sản xuất video dễ dàng, tiết kiệm thời gian.",
+      "cta": "Tạo Kịch Bản & Ảnh",
+      "gallery": "Xem Thư Viện",
+      "prompt": "/prompt: Viết kịch bản và vẽ bối cảnh thành phố cyberpunk về đêm..."
+    },
+    "features": {
+      "title": "Sức Mạnh Vượt Trội",
+      "desc": "Mọi công cụ bạn cần để tự động hoá khâu chuẩn bị nội dung và hình ảnh.",
+      "list": [
+        {
+          "title": "Tự Động Hóa 100%",
+          "desc": "Hệ thống tự động điều khiển hàng loạt tài khoản để sinh kịch bản và hình ảnh số lượng lớn, giúp bạn rảnh tay hoàn toàn."
+        },
+        {
+          "title": "Sáng Tạo Thông Minh",
+          "desc": "Tự động lên ý tưởng, viết kịch bản, vẽ hình ảnh nhân vật và bối cảnh chân thực bằng công nghệ AI đỉnh cao với mức giá siêu rẻ."
+        },
+        {
+          "title": "Quản Lý Đội Nhóm",
+          "desc": "Thiết kế tối ưu cho các doanh nghiệp và studio. Dễ dàng phân chia không gian làm việc, quản lý nhân viên và bảo vệ an toàn dữ liệu."
+        }
+      ]
+    },
+    "howItWorks": {
+      "title": "3 Bước Đơn Giản",
+      "desc": "Chuẩn bị nguyên liệu làm video chưa bao giờ dễ dàng đến thế.",
+      "steps": [
+        {
+          "title": "Nhập Ý Tưởng",
+          "desc": "Chỉ cần viết một vài câu mô tả về bối cảnh, nhân vật hoặc nội dung video bạn mong muốn."
+        },
+        {
+          "title": "AI Xử Lý",
+          "desc": "Hệ thống tự động vạch ra kịch bản chi tiết và vẽ các khung hình (hình ảnh) chất lượng cao."
+        },
+        {
+          "title": "Nhận Nguyên Liệu",
+          "desc": "Tải xuống trọn bộ kịch bản và hình ảnh sắc nét, sẵn sàng để bạn đưa vào dựng video."
+        }
+      ]
+    },
+    "bottomCta": {
+      "title": "Sẵn Sàng Để Bắt Đầu?",
+      "desc": "Gia nhập cùng hàng ngàn nhà sáng tạo đang thay đổi cách làm nội dung với VidForge.AI.",
+      "button": "Đăng Ký Miễn Phí"
+    },
+    "footer": {
+      "desc": "Nền tảng sinh kịch bản và hình ảnh AI tự động hoá hàng đầu.",
+      "product": "Sản phẩm",
+      "resources": "Tài nguyên",
+      "company": "Công ty",
+      "legal": "Pháp lý",
+      "rights": "Bản quyền thuộc về VidForge AI."
+    },
+    "about": {
+      "title": "Về chúng tôi",
+      "subtitle": "Khai phóng sức mạnh sáng tạo với trí tuệ nhân tạo.",
+      "mission_title": "Sứ mệnh của chúng tôi",
+      "mission_desc": "Tại VidForge.AI, sứ mệnh của chúng tôi là dân chủ hóa quá trình chuẩn bị sản xuất video. Chúng tôi tin rằng mọi ý tưởng vĩ đại đều xứng đáng được phác hoạ rõ nét mà không bị rào cản bởi ngân sách hay kỹ năng. Bằng cách tận dụng các mô hình AI tiên tiến nhất, chúng tôi giúp bạn biến những dòng văn bản đơn giản thành kịch bản chi tiết và hình ảnh siêu thực.",
+      "tech_title": "Công nghệ Cốt lõi",
+      "tech_desc": "Nền tảng của chúng tôi được xây dựng trên một kiến trúc hiện đại và bảo mật, cho phép các doanh nghiệp và tổ chức quản lý nhiều tài khoản một cách độc lập. Tích hợp sâu với các mô hình AI ngôn ngữ và hình ảnh hàng đầu (như GPT-4, Midjourney API), VidForge mang lại chất lượng kịch bản và khung hình xuất sắc nhất.",
+      "vision_title": "Tầm nhìn Tương lai",
+      "vision_desc": "Chúng tôi không chỉ xây dựng một công cụ, mà là một hệ sinh thái nguyên liệu sáng tạo. Trong tương lai, VidForge AI sẽ mở rộng hệ thống API để tự động hoá mạnh mẽ hơn nữa mọi công đoạn lên ý tưởng và thiết kế hình ảnh trước khi dựng video."
+    }
+  },
+  "LoginPage": {
+    "title": "Chào mừng trở lại",
+    "subtitle": "Đăng nhập vào tài khoản của bạn để tiếp tục.",
+    "emailLabel": "Địa chỉ email",
+    "emailPlaceholder": "Nhập email của bạn",
+    "passwordLabel": "Mật khẩu",
+    "passwordPlaceholder": "Nhập mật khẩu của bạn",
+    "forgotPassword": "Quên mật khẩu?",
+    "loginButton": "Đăng nhập",
+    "orContinueWith": "Hoặc tiếp tục với",
+    "googleButton": "Đăng nhập với Google",
+    "noAccount": "Chưa có tài khoản?",
+    "signUp": "Đăng ký"
+  },
+  "RegisterPage": {
+    "title": "Tạo tài khoản",
+    "nameLabel": "Họ và tên",
+    "namePlaceholder": "Nhập tên của bạn",
+    "emailLabel": "Địa chỉ email",
+    "emailPlaceholder": "Nhập email của bạn",
+    "passwordLabel": "Mật khẩu",
+    "passwordPlaceholder": "Tạo mật khẩu",
+    "registerButton": "Đăng ký",
+    "orContinueWith": "Hoặc tiếp tục với",
+    "googleButton": "Tiếp tục với Google",
+    "alreadyHaveAccount": "Đã có tài khoản?",
+    "signIn": "Đăng nhập",
+    "alertMessage": "Bản demo hiện tại chỉ hỗ trợ Đăng nhập bằng Google. Vui lòng nhấn 'Tiếp tục với Google' để đăng ký/đăng nhập tự động.",
+    "brandName": "VidForge.AI",
+    "sloganHighlight": "Cách mạng",
+    "sloganFull": "Gia nhập cuộc Cách mạng",
+    "description": "Đăng ký ngay hôm nay để bắt đầu tạo ra những video kỳ diệu với AI."
+  },
+  "Sidebar": {
+    "userMenu": "Menu Người Dùng",
+    "adminMenu": "Menu Quản Trị",
+    "dashboard": "Tổng quan",
+    "projects": "Dự án Kịch bản",
+    "generate": "Phòng Sáng tạo",
+    "library": "Thư viện Nội dung",
+    "prompts": "Quản lý Prompt",
+    "processing": "Công cụ Ảnh",
+    "settings": "Cài đặt & Hồ sơ",
+    "adminDashboard": "Thống kê",
+    "adminUsers": "Quản lý Người dùng",
+    "adminContent": "Quản lý Kịch bản",
+    "adminLogs": "Nhật ký Hệ thống",
+    "adminConfig": "Cấu hình Hệ thống",
+    "logout": "Đăng xuất"
+  }
+}
