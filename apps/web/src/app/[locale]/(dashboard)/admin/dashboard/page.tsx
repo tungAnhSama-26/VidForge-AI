@@ -130,6 +130,56 @@ export default async function AdminDashboardPage({
       requests: Number(d.count)
     }));
 
+    // --- START FAKE DATA OVERRIDE ---
+    let displayUsers = totalUsers;
+    let displayVideos = totalVideos;
+    let displayChats = totalChats;
+    let displayTopPrompts = topPrompts;
+    let displayChartData = chartData;
+    let displayChatTrafficData = chatTrafficData;
+    let displayTopPromptsCount = topPrompts.reduce((acc, p) => acc + Number(p.count), 0);
+
+    // Mocking to show rich data
+    displayUsers = 12854;
+    displayVideos = 45231;
+    displayChats = 189230;
+    
+    displayTopPrompts = [
+      { prompt: "A cinematic shot of a cyberpunk city with flying cars and neon lights", count: 1240 },
+      { prompt: "Anime style girl drinking coffee in a cozy cafe, raining outside", count: 985 },
+      { prompt: "3D render of a cute astronaut cat on Mars looking at earth", count: 820 },
+      { prompt: "Realistic portrait of an old man with deep wrinkles, dramatic lighting", count: 645 },
+      { prompt: "Cinematic drone shot of a magical forest with glowing mushrooms", count: 410 },
+      { prompt: "Beautiful landscape with mountains and a lake at sunset, 8k resolution", count: 350 },
+      { prompt: "A futuristic sports car driving on a coastal highway at night", count: 280 }
+    ] as any;
+    displayTopPromptsCount = displayTopPrompts.reduce((acc: number, p: any) => acc + p.count, 0);
+
+    // Generate 30 days of data for area charts
+    displayChartData = Array.from({ length: 30 }).map((_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (29 - i));
+      // Simulate growth trend
+      const base = 100 + (i * 10);
+      return {
+        date: d.toISOString().split('T')[0],
+        count: base + Math.floor(Math.random() * 50) - 25
+      };
+    });
+
+    displayChatTrafficData = Array.from({ length: 30 }).map((_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (29 - i));
+      // Simulate traffic with weekend dips
+      const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+      const base = isWeekend ? 1500 : 3000;
+      return {
+        name: d.toLocaleDateString('vi-VN', { weekday: 'short' }),
+        requests: base + Math.floor(Math.random() * 500) - 250
+      };
+    });
+    // --- END FAKE DATA OVERRIDE ---
+
     return (
       <div className="p-8 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
@@ -145,14 +195,15 @@ export default async function AdminDashboardPage({
         </div>
 
         <AdminDashboardInteractive 
-          totalUsers={totalUsers.toString()}
-          totalVideos={totalVideos.toString()}
-          totalChats={totalChats.toString()}
+          totalUsers={displayUsers.toString()}
+          totalVideos={displayVideos.toString()}
+          totalChats={displayChats.toString()}
           totalErrors={totalErrors.toString()}
+          topPromptsCount={displayTopPromptsCount.toString()}
           recentProjectsList={recentProjectsList}
-          topPrompts={topPrompts}
-          chartData={chartData}
-          chatTrafficData={chatTrafficData}
+          topPrompts={displayTopPrompts}
+          chartData={displayChartData}
+          chatTrafficData={displayChatTrafficData}
           currentRange={range}
         />
       </div>

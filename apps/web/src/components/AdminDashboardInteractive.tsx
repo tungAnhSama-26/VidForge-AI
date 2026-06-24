@@ -61,8 +61,8 @@ export default function AdminDashboardInteractive({
   const defaultStats = [
     { label: "Tổng người dùng", value: totalUsers || "0", icon: Users, color: "text-blue-500", bg: "bg-blue-500/10" },
     { label: "Tổng nội dung", value: totalVideos || "0", icon: LayoutDashboard, color: "text-purple-500", bg: "bg-purple-500/10" },
-    { label: "Lượt Chat API", value: totalChats || "0", icon: Activity, color: "text-emerald-500", bg: "bg-emerald-500/10" },
-    { label: "Lỗi hệ thống", value: totalErrors || "0", icon: DollarSign, color: "text-amber-500", bg: "bg-amber-500/10" },
+    { label: "Tương tác AI", value: totalChats || "0", icon: Activity, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+    { label: "Lượt dùng Prompt", value: topPromptsCount || "0", icon: Settings, color: "text-amber-500", bg: "bg-amber-500/10" },
   ];
 
   const displayStats = stats?.length ? stats : defaultStats;
@@ -70,8 +70,8 @@ export default function AdminDashboardInteractive({
   // Pie chart data
   const aiUsageData = [
     { name: 'Video Generation', value: parseInt(totalVideos || "0") || 1 },
-    { name: 'Chat API', value: parseInt(totalChats || "0") || 1 },
-    { name: 'System Errors', value: parseInt(totalErrors || "0") || 0 }
+    { name: 'Tương tác AI', value: parseInt(totalChats || "0") || 1 },
+    { name: 'Lượt dùng Prompt', value: parseInt(topPromptsCount || "0") || 0 }
   ].filter(d => d.value > 0);
 
   // Map topPrompts to BarChart format

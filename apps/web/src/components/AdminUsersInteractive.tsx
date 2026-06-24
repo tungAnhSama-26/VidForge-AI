@@ -7,7 +7,7 @@ export default function AdminUsersInteractive({ initialUsers }: { initialUsers: 
   const [users, setUsers] = useState(initialUsers);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [planFilter, setPlanFilter] = useState("all");
+  const [roleFilter, setRoleFilter] = useState("all");
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,20 +16,18 @@ export default function AdminUsersInteractive({ initialUsers }: { initialUsers: 
   const resetFilters = () => {
     setSearchTerm("");
     setStatusFilter("all");
-    setPlanFilter("all");
+    setRoleFilter("all");
     setCurrentPage(1);
   };
 
-  // Filter users based on search, status, and plan
+  // Filter users based on search, status, and role
   const filteredUsers = users.filter(u => {
     const matchesSearch = u.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           u.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" ? true : u.status === statusFilter;
-    // Assuming role or a new 'plan' property exists. We map 'plan' based on role for mock purpose if it doesn't exist
-    const mockPlan = u.role === "admin" ? "premium" : "free"; 
-    const matchesPlan = planFilter === "all" ? true : mockPlan === planFilter;
+    const matchesRole = roleFilter === "all" ? true : u.role === roleFilter;
 
-    return matchesSearch && matchesStatus && matchesPlan;
+    return matchesSearch && matchesStatus && matchesRole;
   });
 
   // Pagination calculation
@@ -94,15 +92,15 @@ export default function AdminUsersInteractive({ initialUsers }: { initialUsers: 
             <option value="locked">Tạm ngưng</option>
           </select>
 
-          {/* Plan Filter */}
+          {/* Role Filter */}
           <select 
-            value={planFilter}
-            onChange={(e) => { setPlanFilter(e.target.value); setCurrentPage(1); }}
+            value={roleFilter}
+            onChange={(e) => { setRoleFilter(e.target.value); setCurrentPage(1); }}
             className="bg-[#1a1a1b] border border-white/10 rounded-lg py-2 px-3 text-sm text-white/80 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer min-w-[140px]"
           >
-            <option value="all">Tất cả gói cước</option>
-            <option value="free">Miễn phí</option>
-            <option value="premium">Premium</option>
+            <option value="all">Tất cả vai trò</option>
+            <option value="user">Người dùng</option>
+            <option value="admin">Quản trị viên</option>
           </select>
 
           {/* Reset Button */}
@@ -141,7 +139,10 @@ export default function AdminUsersInteractive({ initialUsers }: { initialUsers: 
             <tbody className="divide-y divide-white/5">
               {paginatedUsers.map((user, index) => {
                 const rowIndex = startIndex + index + 1;
-                const isPremium = user.role === "admin" || user.plan === "premium";
+                // Still keeping "PREMIUM" display logic based on role just for visual matching the screenshot if needed, 
+                // or just remove the GÓI column. The user said "k có gói cước nào nên là lọc theo role nhé", 
+                // but the table still has a "GÓI" column based on the screenshot. I'll leave the column visual there.
+                const isPremium = user.role === "admin"; 
                 
                 return (
                   <tr key={user.id} className="hover:bg-white/[0.02] transition-colors group">
