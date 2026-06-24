@@ -1,21 +1,34 @@
 "use client";
 
-import { Link } from "@/routing";
-import { Mail, Lock, User, UserPlus, Sparkles } from "lucide-react";
+import { Link, useRouter } from "@/routing";
+import { Mail, Lock, User, UserPlus, Sparkles, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
 
 export default function RegisterForm() {
   const t = useTranslations("RegisterPage");
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Register", { name, email, password });
-    alert(t("alertMessage"));
+    if (password !== confirmPassword) {
+      alert("Mật khẩu xác nhận không khớp!");
+      return;
+    }
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      alert("Đăng ký thành công! Vui lòng đăng nhập bằng tài khoản vừa tạo.");
+      router.push("/login");
+    }, 1000);
   };
 
   return (
@@ -82,22 +95,62 @@ export default function RegisterForm() {
                     <Lock className="w-5 h-5 text-gray-500 group-focus-within/input:text-pink-400 transition-colors" />
                   </div>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder={t("passwordPlaceholder")}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white text-lg placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all duration-300"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-12 text-white text-lg placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all duration-300"
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-500 hover:text-pink-400 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-2.5">
+                <label className="text-sm font-medium text-gray-300 ml-1">
+                  Xác nhận mật khẩu
+                </label>
+                <div className="relative group/input">
+                  <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                    <Lock className="w-5 h-5 text-gray-500 group-focus-within/input:text-pink-400 transition-colors" />
+                  </div>
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Nhập lại mật khẩu"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-12 text-white text-lg placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all duration-300"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-500 hover:text-pink-400 transition-colors"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-4 mt-4 rounded-2xl bg-white text-black text-lg font-bold flex items-center justify-center gap-2 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(255,255,255,0.3)] transition-all duration-300 group/btn"
+                disabled={isLoading}
+                className="w-full py-4 mt-4 rounded-2xl bg-white text-black text-lg font-bold flex items-center justify-center gap-2 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(255,255,255,0.3)] transition-all duration-300 group/btn disabled:opacity-70 disabled:hover:scale-100 disabled:hover:translate-y-0 disabled:hover:shadow-none"
               >
-                <UserPlus className="w-5 h-5 group-hover/btn:rotate-12 transition-transform" />
-                {t("registerButton")}
+                {isLoading ? (
+                  <span className="animate-spin w-5 h-5 border-2 border-black border-t-transparent rounded-full" />
+                ) : (
+                  <>
+                    <UserPlus className="w-5 h-5 group-hover/btn:rotate-12 transition-transform" />
+                    {t("registerButton")}
+                  </>
+                )}
               </button>
             </form>
 
