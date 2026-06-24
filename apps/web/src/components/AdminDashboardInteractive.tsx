@@ -76,7 +76,7 @@ export default function AdminDashboardInteractive({
 
   // Map topPrompts to BarChart format
   const topPromptsData = topPrompts.map(p => ({
-    name: p.prompt.length > 40 ? p.prompt.substring(0, 40) + '...' : p.prompt,
+    name: p.prompt.length > 25 ? p.prompt.substring(0, 25) + '...' : p.prompt,
     count: p.count,
     fullPrompt: p.prompt
   }));
@@ -231,12 +231,12 @@ export default function AdminDashboardInteractive({
                 <BarChart
                   layout="vertical"
                   data={topPromptsData}
-                  margin={{ top: 0, right: 30, left: 150, bottom: 0 }}
+                  margin={{ top: 0, right: 30, left: 0, bottom: 0 }}
                   barSize={12}
                 >
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="rgba(255,255,255,0.05)" />
                   <XAxis type="number" stroke="rgba(255,255,255,0.3)" tick={{fill: 'rgba(255,255,255,0.5)', fontSize: 11}} tickLine={false} axisLine={false} />
-                  <YAxis type="category" dataKey="name" stroke="rgba(255,255,255,0.5)" tick={{fill: 'rgba(255,255,255,0.7)', fontSize: 11}} tickLine={false} axisLine={false} />
+                  <YAxis type="category" dataKey="name" width={140} stroke="rgba(255,255,255,0.5)" tick={{fill: 'rgba(255,255,255,0.7)', fontSize: 11}} tickLine={false} axisLine={false} />
                   <Tooltip 
                     cursor={{fill: 'rgba(255,255,255,0.02)'}}
                     contentStyle={{ backgroundColor: '#27272a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff' }}
