@@ -29,6 +29,13 @@
       "when": 1782104443728,
       "tag": "0003_flowery_hellfire_club",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1782336962128,
+      "tag": "0004_spicy_wolfsbane",
+      "breakpoints": true
     }
   ]
 }

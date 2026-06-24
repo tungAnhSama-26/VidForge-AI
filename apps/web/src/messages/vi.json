@@ -97,6 +97,36 @@
     "noAccount": "Chưa có tài khoản?",
     "signUp": "Đăng ký"
   },
+  "ForgotPasswordPage": {
+    "title": "Quên mật khẩu?",
+    "subtitle": "Nhập email của bạn và chúng tôi sẽ gửi liên kết đặt lại mật khẩu.",
+    "emailLabel": "Địa chỉ email",
+    "emailPlaceholder": "Nhập email của bạn",
+    "submitButton": "Gửi liên kết đặt lại",
+    "backToLogin": "Quay lại đăng nhập",
+    "rememberPassword": "Nhớ ra mật khẩu rồi?",
+    "loginLink": "Đăng nhập",
+    "successTitle": "Kiểm tra email của bạn!",
+    "successDesc": "Chúng tôi đã gửi hướng dẫn đặt lại mật khẩu. Vui lòng kiểm tra hộp thư (cả thư rác).",
+    "devNote": "Ảnh: Link đặt lại đang được log trong server console (chế độ mock)."
+  },
+  "ResetPasswordPage": {
+    "title": "Đặt lại mật khẩu",
+    "subtitle": "Nhập mật khẩu mới của bạn bên dưới.",
+    "newPasswordLabel": "Mật khẩu mới",
+    "newPasswordPlaceholder": "Nhập mật khẩu mới",
+    "confirmPasswordLabel": "Xác nhận mật khẩu",
+    "confirmPasswordPlaceholder": "Nhập lại mật khẩu mới",
+    "submitButton": "Cập nhật mật khẩu",
+    "backToLogin": "Quay lại đăng nhập",
+    "invalidTitle": "Link không hợp lệ",
+    "invalidDesc": "Link đặt lại mật khẩu không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu một link mới.",
+    "requestNewLink": "Yêu cầu link mới",
+    "successTitle": "Đặt lại thành công!",
+    "successDesc": "Mật khẩu của bạn đã được cập nhật. Bạn có thể đăng nhập bằng mật khẩu mới ngay bây giờ.",
+    "redirecting": "Đang chuyển hướng về trang đăng nhập...",
+    "goToLogin": "Về trang đăng nhập"
+  },
   "RegisterPage": {
     "title": "Tạo tài khoản",
     "nameLabel": "Họ và tên",

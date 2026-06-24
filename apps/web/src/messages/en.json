@@ -97,6 +97,36 @@
     "noAccount": "Don't have an account?",
     "signUp": "Sign up"
   },
+  "ForgotPasswordPage": {
+    "title": "Forgot password?",
+    "subtitle": "Enter your email and we'll send you a password reset link.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "Enter your email",
+    "submitButton": "Send reset link",
+    "backToLogin": "Back to login",
+    "rememberPassword": "Remembered your password?",
+    "loginLink": "Log in",
+    "successTitle": "Check your email!",
+    "successDesc": "We sent a reset link to your inbox. Please check your email (including spam folder).",
+    "devNote": "Dev mode: Reset link is logged in server console (mock mode)."
+  },
+  "ResetPasswordPage": {
+    "title": "Reset password",
+    "subtitle": "Enter your new password below.",
+    "newPasswordLabel": "New password",
+    "newPasswordPlaceholder": "Enter new password",
+    "confirmPasswordLabel": "Confirm password",
+    "confirmPasswordPlaceholder": "Re-enter new password",
+    "submitButton": "Update password",
+    "backToLogin": "Back to login",
+    "invalidTitle": "Invalid link",
+    "invalidDesc": "This password reset link is invalid or has expired. Please request a new one.",
+    "requestNewLink": "Request new link",
+    "successTitle": "Password updated!",
+    "successDesc": "Your password has been successfully updated. You can now log in with your new password.",
+    "redirecting": "Redirecting to login...",
+    "goToLogin": "Go to login"
+  },
   "RegisterPage": {
     "title": "Create Account",
     "nameLabel": "Name",

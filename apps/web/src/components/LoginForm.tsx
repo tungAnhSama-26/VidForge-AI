@@ -5,9 +5,11 @@ import { Link } from "@/routing";
 import { Mail, Lock, LogIn, Sparkles, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { useRouter } from "@/routing";
 
 export default function LoginForm() {
   const t = useTranslations("LoginPage");
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -24,7 +26,8 @@ export default function LoginForm() {
       if (res?.error) {
         alert("Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.");
       } else {
-        window.location.href = "/";
+        router.push("/");
+        router.refresh();
       }
     } catch (error) {
       console.error(error);
@@ -75,7 +78,7 @@ export default function LoginForm() {
                   <label className="text-sm font-medium text-gray-300">
                     {t("passwordLabel")}
                   </label>
-                  <Link href="#" onClick={(e) => { e.preventDefault(); alert("Chức năng đang được phát triển."); }} className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
+                  <Link href="/forgot-password" className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
                     {t("forgotPassword")}
                   </Link>
                 </div>

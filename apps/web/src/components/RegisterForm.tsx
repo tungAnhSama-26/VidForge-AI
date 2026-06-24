@@ -40,7 +40,8 @@ export default function RegisterForm() {
           callbackUrl: "/"
         });
         if (!loginRes?.error) {
-          window.location.href = "/";
+          router.push("/");
+          router.refresh();
         } else {
           router.push("/login");
         }
