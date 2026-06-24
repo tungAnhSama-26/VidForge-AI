@@ -26,7 +26,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       }
     }, () => {
       chrome.tabs.create({ 
-        url: 'http://vidforge-ai.duckdns.org/dashboard/generate?fromExtension=true' 
+        url: 'https://vidforge-ai.duckdns.org/' 
       });
     });
   }

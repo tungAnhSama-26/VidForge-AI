@@ -11,11 +11,12 @@
     "activeTab",
     "scripting",
     "storage",
-    "sidePanel"
+    "sidePanel",
+    "contextMenus"
   ],
   "host_permissions": [
     "<all_urls>",
-    "http://vidforge-ai.duckdns.org/*"
+    "https://vidforge-ai.duckdns.org/*"
   ],
   "background": {
     "service_worker": "background.js"

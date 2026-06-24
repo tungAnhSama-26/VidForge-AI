@@ -1,5 +1,5 @@
 document.getElementById('openAppBtn').addEventListener('click', () => {
-  chrome.tabs.create({ url: 'http://vidforge-ai.duckdns.org/dashboard' });
+  chrome.tabs.create({ url: 'https://vidforge-ai.duckdns.org/' });
 });
 
 document.getElementById('extractBtn').addEventListener('click', async () => {
@@ -15,7 +15,7 @@ document.getElementById('extractBtn').addEventListener('click', async () => {
           setTimeout(() => {
             // Open VidForge AI generator page with the extracted content
             chrome.tabs.create({ 
-              url: 'http://vidforge-ai.duckdns.org/dashboard/generate?fromExtension=true' 
+              url: 'https://vidforge-ai.duckdns.org/' 
             });
           }, 1000);
         });

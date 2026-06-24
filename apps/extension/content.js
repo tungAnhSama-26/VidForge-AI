@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // Auto-fill prompt if we are on VidForge AI generate page
-if (window.location.href.includes('vidforge-ai.duckdns.org/dashboard/generate')) {
+if (window.location.href.includes('vidforge-ai.duckdns.org/')) {
   chrome.storage.local.get(['extractedContent'], function(result) {
     if (result.extractedContent && result.extractedContent.text) {
       // Small delay to ensure the React app has rendered the textarea
