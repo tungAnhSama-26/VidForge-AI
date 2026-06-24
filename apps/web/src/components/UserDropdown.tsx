@@ -15,7 +15,7 @@ interface UserDropdownProps {
     role?: string | null;
   };
   role?: string;
-  mode: "header" | "sidebar";
+  mode: "header" | "sidebar" | "icon-only";
 }
 
 export default function UserDropdown({ user, role, mode }: UserDropdownProps) {
@@ -54,6 +54,20 @@ export default function UserDropdown({ user, role, mode }: UserDropdownProps) {
           <span className="text-[11px] sm:text-xs font-medium text-white/80 hidden md:block group-hover:text-white transition-colors whitespace-nowrap tracking-tight">
             {user?.name || "User"}
           </span>
+        </button>
+      ) : mode === "icon-only" ? (
+        <button 
+          onClick={() => setIsDropdownOpen(!isOpen)}
+          className="w-full bg-white/5 hover:bg-white/10 rounded-xl p-3 flex items-center justify-center transition-colors"
+          title={user?.name || "User"}
+        >
+          {user?.image ? (
+            <Image src={user.image} alt={user?.name || "User"} width={32} height={32} className="rounded-full flex-shrink-0" />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
+              <UserIcon className="w-4 h-4 text-white" />
+            </div>
+          )}
         </button>
       ) : (
         <button 

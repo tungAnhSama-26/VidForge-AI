@@ -12,10 +12,24 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login", { email, password });
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email,
+        password,
+        callbackUrl: "/"
+      });
+      if (res?.error) {
+        alert("Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.");
+      } else {
+        window.location.href = "/";
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Có lỗi xảy ra");
+    }
   };
 
   return (

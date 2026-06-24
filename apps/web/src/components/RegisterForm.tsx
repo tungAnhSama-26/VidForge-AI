@@ -17,18 +17,42 @@ export default function RegisterForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Mật khẩu xác nhận không khớp!");
       return;
     }
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert("Đăng ký thành công! Đang đăng nhập...");
+        const loginRes = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
+          callbackUrl: "/"
+        });
+        if (!loginRes?.error) {
+          window.location.href = "/";
+        } else {
+          router.push("/login");
+        }
+      } else {
+        alert(data.message || "Đăng ký thất bại");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Có lỗi xảy ra");
+    } finally {
       setIsLoading(false);
-      alert("Đăng ký thành công! Vui lòng đăng nhập bằng tài khoản vừa tạo.");
-      router.push("/login");
-    }, 1000);
+    }
   };
 
   return (

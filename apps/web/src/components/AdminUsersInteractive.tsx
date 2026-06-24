@@ -63,6 +63,12 @@ export default function AdminUsersInteractive({ initialUsers }: { initialUsers: 
 
   return (
     <div className="p-8">
+      {/* Screen Title */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-white mb-2">Quản lý người dùng</h1>
+        <p className="text-white/60">Quản lý danh sách, vai trò và trạng thái của người dùng trong hệ thống</p>
+      </div>
+
       {/* Top Bar */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
