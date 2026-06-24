@@ -76,7 +76,7 @@ export default function AdminDashboardInteractive({
 
   // Map topPrompts to BarChart format
   const topPromptsData = topPrompts.map(p => ({
-    name: p.prompt.length > 20 ? p.prompt.substring(0, 20) + '...' : p.prompt,
+    name: p.prompt.length > 40 ? p.prompt.substring(0, 40) + '...' : p.prompt,
     count: p.count,
     fullPrompt: p.prompt
   }));
@@ -231,7 +231,7 @@ export default function AdminDashboardInteractive({
                 <BarChart
                   layout="vertical"
                   data={topPromptsData}
-                  margin={{ top: 0, right: 30, left: 40, bottom: 0 }}
+                  margin={{ top: 0, right: 30, left: 150, bottom: 0 }}
                   barSize={12}
                 >
                   <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="rgba(255,255,255,0.05)" />
