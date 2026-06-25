@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "VidForge AI",
   "version": "1.0.0",
-  "description": "Tiện ích mở rộng tương tác với trình duyệt và kết nối VidForge AI",
+  "description": "VidForge AI Content Extractor",
   "icons": {
     "16": "icon.jpg",
     "48": "icon.jpg",
