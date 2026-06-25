@@ -190,7 +190,6 @@ export default function AdminUsersInteractive({ initialUsers }: { initialUsers: 
       "Tên người dùng": u.name,
       "Email": u.email,
       "Vai trò": u.role === "admin" ? "Quản trị viên" : "Người dùng",
-      "Gói": u.role === "admin" ? "PREMIUM" : "Miễn phí",
       "Trạng thái": u.status === "active" ? "Hoạt động" : "Tạm ngưng",
       "Ngày tham gia": u.lastLogin || new Date(u.createdAt || Date.now()).toLocaleDateString("vi-VN"),
       "Số dự án": u.projects
@@ -280,7 +279,7 @@ export default function AdminUsersInteractive({ initialUsers }: { initialUsers: 
                   <th className="px-6 py-4 font-semibold text-white/60 uppercase tracking-wider">NGƯỜI DÙNG</th>
                   <th className="px-6 py-4 font-semibold text-white/60 uppercase tracking-wider">EMAIL</th>
                   <th className="px-6 py-4 font-semibold text-white/60 uppercase tracking-wider">VAI TRÒ</th>
-                  <th className="px-6 py-4 font-semibold text-white/60 uppercase tracking-wider">GÓI</th>
+
                   <th className="px-6 py-4 font-semibold text-white/60 uppercase tracking-wider">TRẠNG THÁI</th>
                   <th className="px-6 py-4 font-semibold text-white/60 uppercase tracking-wider">NGÀY THAM GIA</th>
                   <th className="px-6 py-4 font-semibold text-white/60 uppercase tracking-wider text-center">HÀNH ĐỘNG</th>
@@ -313,13 +312,7 @@ export default function AdminUsersInteractive({ initialUsers }: { initialUsers: 
                           <span className="inline-flex items-center py-1 px-3 rounded-full bg-white/5 text-white/60 text-xs font-medium">Người dùng</span>
                         )}
                       </td>
-                      <td className="px-6 py-4">
-                        {isPremium ? (
-                          <span className="inline-flex items-center py-1 px-3 rounded-full bg-blue-500/10 text-blue-400 text-xs font-medium">PREMIUM</span>
-                        ) : (
-                          <span className="text-white/50 text-xs font-medium px-3">Miễn phí</span>
-                        )}
-                      </td>
+
                       <td className="px-6 py-4">
                         {user.status === "active" ? (
                           <span className="inline-flex items-center py-1 px-3 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium">Hoạt động</span>
@@ -345,7 +338,7 @@ export default function AdminUsersInteractive({ initialUsers }: { initialUsers: 
 
                 {paginatedUsers.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="p-8 text-center text-white/50">
+                    <td colSpan={7} className="p-8 text-center text-white/50">
                       Không tìm thấy người dùng nào phù hợp.
                     </td>
                   </tr>
