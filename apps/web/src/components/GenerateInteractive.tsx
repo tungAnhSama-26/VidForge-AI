@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Sparkles, FileText, Image as ImageIcon, Send, Loader2, User, Download, X, ZoomIn, Paperclip, Mic, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 type Message = {
   id: string;
@@ -36,11 +37,12 @@ const DelayedImage = ({ src, alt, className, delay }: { src: string, alt: string
 
 
 export default function GenerateInteractive({ sessionId: initialSessionId }: { sessionId?: string }) {
+  const t = useTranslations("Generate");
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "init-1",
       role: "ai",
-      text: "Xin chào! Bạn có ý tưởng gì cho video hôm nay? Hãy chia sẻ và chúng ta cùng lên kịch bản nhé. Tôi sẽ giúp bạn hoàn thiện ý tưởng trước khi tạo ảnh.",
+      text: t("greeting"),
     }
   ]);
   const [inputValue, setInputValue] = useState("");
@@ -150,7 +152,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
       setIsRecording(true);
     } catch (err) {
       console.error("Microphone access denied or error:", err);
-      setError("Không thể truy cập microphone.");
+      setError(t("micError"));
     }
   };
 
@@ -208,15 +210,15 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
       }
     } catch (err) {
       console.error(err);
-      const errorMessage = err instanceof Error ? err.message : (err as any)?.message || "Sự cố kết nối";
-      let friendlyText = "Xin lỗi, tôi đang gặp chút sự cố kết nối. Bạn có thể thử lại hoặc nhấn 'Bắt đầu Sáng tạo' ngay nếu bạn muốn.";
+      const errorMessage = err instanceof Error ? err.message : (err as any)?.message || t("connectionError");
+      let friendlyText = t("connectionErrorMsg");
       
       if (errorMessage.includes("503") || errorMessage.toLowerCase().includes("high demand")) {
-        friendlyText = "Hệ thống AI hiện đang quá tải. Bạn vui lòng đợi vài giây rồi thử chat lại nhé!";
+        friendlyText = t("aiOverload");
       } else if (errorMessage.includes("API Key Gemini không hợp lệ") || errorMessage.includes("API Key Groq không hợp lệ")) {
         friendlyText = errorMessage;
       } else if (errorMessage.includes("API key not valid") || errorMessage.includes("GEMINI_API_KEY")) {
-        friendlyText = `Lỗi API Key: Vui lòng cập nhật lại GEMINI_API_KEY hợp lệ trong cấu hình (.env).`;
+        friendlyText = t("apiKeyError");
       } else if (errorMessage) {
         friendlyText = `Lỗi: ${errorMessage}`;
       }
@@ -259,7 +261,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: "ai",
-        text: "Tôi đã tạo xong kịch bản cho bạn:",
+        text: t("scriptDone"),
         script: data.script
       }]);
     } catch (err: unknown) {
@@ -305,7 +307,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
         role: "ai",
-        text: "Dưới đây là hình ảnh thực tế dựa trên ý tưởng của bạn:",
+        text: t("imagesDone"),
         images: data.images
       }]);
     } catch (err: unknown) {
@@ -371,7 +373,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
         {isInitialLoading ? (
           <div className="h-full flex flex-col items-center justify-center text-white/40 space-y-4">
             <Loader2 className="w-8 h-8 animate-spin" />
-            <p>Đang tải cuộc trò chuyện...</p>
+            <p>{t("loadingChat")}</p>
           </div>
         ) : (
           <>
@@ -400,7 +402,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
                             ) : (
                               <div className="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
                                 <FileText className="w-6 h-6 text-blue-400" />
-                                <span className="text-sm truncate max-w-[150px]" title={att.name}>{att.name || "Tệp đính kèm"}</span>
+                                <span className="text-sm truncate max-w-[150px]" title={att.name}>{att.name || t("attachment")}</span>
                               </div>
                             )}
                           </div>
@@ -420,11 +422,11 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
                       <div className="flex items-center justify-between mb-4 border-b border-white/10 pb-4">
                         <div className="flex items-center gap-2">
                           <FileText className="w-5 h-5 text-blue-400" />
-                          <h3 className="font-bold text-lg text-white">Kịch bản chi tiết</h3>
+                          <h3 className="font-bold text-lg text-white">{t("detailedScript")}</h3>
                         </div>
                         <button onClick={() => downloadScriptAsWord(msg.script!)} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-colors border border-white/10">
                           <Download className="w-4 h-4" />
-                          Tải Word
+                          {t("downloadWord")}
                         </button>
                       </div>
                       <pre className="whitespace-pre-wrap font-sans text-gray-300 bg-transparent p-0 m-0 border-none text-base leading-loose">
@@ -442,7 +444,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
                     >
                       <div className="flex items-center gap-2 mb-4 border-b border-white/10 pb-4">
                         <ImageIcon className="w-5 h-5 text-pink-400" />
-                        <h3 className="font-bold text-lg text-white">Hình ảnh minh họa</h3>
+                        <h3 className="font-bold text-lg text-white">{t("illustrations")}</h3>
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {msg.images.map((img, i) => (
@@ -452,12 +454,12 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
                             
                             {/* Overlay with buttons */}
                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4 pointer-events-none">
-                              <p className="text-white text-sm font-medium">Cảnh {i + 1}</p>
+                              <p className="text-white text-sm font-medium">{t("scene")} {i + 1}</p>
                               <div className="flex gap-2 pointer-events-auto">
-                                <button onClick={() => setPreviewImage(img)} title="Xem phóng to" className="p-2 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white transition-colors border border-white/10">
+                                <button onClick={() => setPreviewImage(img)} title={t("zoomIn")} className="p-2 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white transition-colors border border-white/10">
                                   <ZoomIn className="w-4 h-4" />
                                 </button>
-                                <button onClick={() => downloadImage(img, i)} title="Tải ảnh về máy" className="p-2 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white transition-colors border border-white/10">
+                                <button onClick={() => downloadImage(img, i)} title={t("downloadImage")} className="p-2 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white transition-colors border border-white/10">
                                   <Download className="w-4 h-4" />
                                 </button>
                               </div>
@@ -487,9 +489,9 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
                 <div className="bg-transparent p-4 flex gap-2 items-center text-white/50">
                   <Loader2 className="w-5 h-5 animate-spin" />
                     <span className="text-sm font-medium text-white/70">
-                      {isGeneratingScript ? "Đang viết kịch bản..." : 
-                     isGeneratingImages ? "Đang tạo hình ảnh..." : 
-                     "AI đang suy nghĩ..."}
+                      {isGeneratingScript ? t("writingScript") : 
+                     isGeneratingImages ? t("generatingImages") : 
+                     t("aiThinking")}
                     </span>
                 </div>
               </div>
@@ -538,7 +540,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
               }}
               disabled={isGeneratingScript || isGeneratingImages || isTyping}
               className="w-full bg-transparent border-none resize-none min-h-[56px] max-h-[200px] py-4 px-4 text-white placeholder:text-white/40 focus:outline-none focus:ring-0 text-base"
-              placeholder="Nhập yêu cầu tại đây..."
+              placeholder={t("placeholder")}
               rows={1}
               style={{
                 height: "auto",
@@ -564,14 +566,14 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
               <div className="flex items-center gap-1">
                 <button 
                   onClick={() => fileInputRef.current?.click()}
-                  title="Đính kèm file hoặc ảnh"
+                  title={t("attachFile")}
                   className="p-2 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors"
                 >
                   <Paperclip className="w-5 h-5" />
                 </button>
                 <button 
                   onClick={isRecording ? stopRecording : startRecording}
-                  title={isRecording ? "Dừng ghi âm" : "Ghi âm"}
+                  title={isRecording ? t("stopRecord") : t("startRecord")}
                   className={`p-2 rounded-full transition-colors ${isRecording ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30 animate-pulse' : 'hover:bg-white/10 text-white/70 hover:text-white'}`}
                 >
                   <Mic className="w-5 h-5" />
@@ -587,7 +589,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
                       className="flex items-center gap-2 bg-transparent hover:bg-white/10 text-white px-3 py-1.5 rounded-full text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <FileText className="w-4 h-4 text-blue-400" />
-                      Viết Kịch bản
+                      {t("writeScript")}
                     </button>
                     <button 
                       onClick={handleGenerateImages}
@@ -595,7 +597,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
                       className="flex items-center gap-2 bg-transparent hover:bg-white/10 text-white px-3 py-1.5 rounded-full text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <ImageIcon className="w-4 h-4 text-pink-400" />
-                      Tạo Hình ảnh
+                      {t("generateImages")}
                     </button>
                   </>
                 )}
@@ -612,7 +614,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
           
           <div className="text-center mt-3">
             <p className="text-xs text-white/30">
-              VidForge AI có thể mắc lỗi. Vui lòng kiểm tra lại thông tin quan trọng.
+              {t("disclaimer")}
             </p>
           </div>
         </div>
@@ -637,7 +639,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
             src={previewImage} 
-            alt="Phóng to" 
+            alt={t("zoom")} 
             className="max-w-full max-h-full object-contain rounded-lg shadow-2xl" 
             onClick={(e) => e.stopPropagation()} // Prevent clicking image from closing
           />
