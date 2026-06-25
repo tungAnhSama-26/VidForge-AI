@@ -11,7 +11,7 @@
   "dependencies": {
     "@vidforge/core": "*",
     "@vidforge/db": "^0.1.0",
-    "bcryptjs": "^3.0.3",
+    "bcryptjs": "2.4.3",
     "date-fns": "^4.4.0",
     "framer-motion": "^12.40.0",
     "lucide-react": "^1.18.0",

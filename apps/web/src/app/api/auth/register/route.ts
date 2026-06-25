@@ -5,10 +5,17 @@ import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password } = await req.json();
+    const body = await req.json();
+    const { name, email, password } = body;
+
+    console.log("[Register API] Request:", { name, email, passwordLen: password?.length });
 
     if (!name || !email || !password) {
       return NextResponse.json({ message: "Thiếu thông tin bắt buộc" }, { status: 400 });
+    }
+
+    if (password.length < 6) {
+      return NextResponse.json({ message: "Mật khẩu phải có ít nhất 6 ký tự" }, { status: 400 });
     }
 
     // Check if user exists
@@ -17,7 +24,10 @@ export async function POST(req: Request) {
     });
 
     if (existingUser) {
-      return NextResponse.json({ message: "Email đã được sử dụng" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Email này đã được sử dụng. Vui lòng đăng nhập hoặc dùng email khác." },
+        { status: 400 }
+      );
     }
 
     // Hash password
@@ -32,21 +42,36 @@ export async function POST(req: Request) {
     }).returning();
     const dbUser = newUsers[0];
 
-    // Create tenant and tenant member
+    // Create tenant and member record
     const newTenants = await db.insert(tenants).values({
       name: `${name}'s Workspace`,
       slug: `workspace-${dbUser.id.substring(0, 8)}`,
     }).returning();
-    
+
     await db.insert(tenantMembers).values({
       tenantId: newTenants[0].id,
       userId: dbUser.id,
-      role: "owner"
+      role: "owner",
     });
 
+    console.log("[Register API] ✅ Thành công:", email);
     return NextResponse.json({ message: "Đăng ký thành công", userId: dbUser.id }, { status: 201 });
-  } catch (error) {
-    console.error("Lỗi đăng ký:", error);
-    return NextResponse.json({ message: "Có lỗi xảy ra khi đăng ký" }, { status: 500 });
+
+  } catch (error: any) {
+    const errMsg = error?.message || String(error);
+    const errCode = error?.code || "";
+    console.error("[Register API] ❌ Lỗi:", { message: errMsg, code: errCode });
+
+    let userMessage = "Có lỗi xảy ra khi đăng ký";
+    if (errCode === "23505") {
+      userMessage = "Email này đã được sử dụng.";
+    } else if (errMsg.includes("ECONNREFUSED") || errMsg.includes("connect")) {
+      userMessage = "Không thể kết nối database. Kiểm tra PostgreSQL đang chạy.";
+    }
+
+    return NextResponse.json(
+      { message: userMessage, detail: process.env.NODE_ENV === "development" ? errMsg : undefined },
+      { status: 500 }
+    );
   }
 }
