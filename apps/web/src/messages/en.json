@@ -135,6 +135,8 @@
     "emailPlaceholder": "Enter your email",
     "passwordLabel": "Password",
     "passwordPlaceholder": "Create a password",
+    "confirmPasswordLabel": "Confirm password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
     "registerButton": "Sign Up",
     "orContinueWith": "Or continue with",
     "googleButton": "Continue with Google",

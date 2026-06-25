@@ -1,7 +1,7 @@
 "use client";
 
 import { Link, useRouter } from "@/routing";
-import { Mail, Lock, User, UserPlus, Sparkles, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, User, UserPlus, Sparkles, Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useTranslations } from "next-intl";
@@ -16,13 +16,23 @@ export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
+
     if (password !== confirmPassword) {
-      alert("Mật khẩu xác nhận không khớp!");
+      setError("Mật khẩu xác nhận không khớp!");
       return;
     }
+    if (password.length < 6) {
+      setError("Mật khẩu phải có ít nhất 6 ký tự.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const res = await fetch("/api/auth/register", {
@@ -32,7 +42,7 @@ export default function RegisterForm() {
       });
       const data = await res.json();
       if (res.ok) {
-        alert("Đăng ký thành công! Đang đăng nhập...");
+        setSuccess("Đăng ký thành công! Đang đăng nhập...");
         const loginRes = await signIn("credentials", {
           redirect: false,
           email,
@@ -43,14 +53,16 @@ export default function RegisterForm() {
           router.push("/");
           router.refresh();
         } else {
-          router.push("/login");
+          // Đăng ký OK nhưng login fail → redirect về login
+          setSuccess("Đăng ký thành công! Vui lòng đăng nhập.");
+          setTimeout(() => router.push("/login"), 1500);
         }
       } else {
-        alert(data.message || "Đăng ký thất bại");
+        setError(data.message || "Đăng ký thất bại. Vui lòng thử lại.");
       }
-    } catch (error) {
-      console.error(error);
-      alert("Có lỗi xảy ra");
+    } catch (err) {
+      console.error(err);
+      setError("Có lỗi xảy ra. Vui lòng thử lại.");
     } finally {
       setIsLoading(false);
     }
@@ -72,6 +84,22 @@ export default function RegisterForm() {
               </h1>
             </div>
 
+            {/* Inline Error */}
+            {error && (
+              <div className="mb-6 flex items-center gap-3 px-5 py-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            {/* Inline Success */}
+            {success && (
+              <div className="mb-6 flex items-center gap-3 px-5 py-4 rounded-2xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm">
+                <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                <span>{success}</span>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-7">
               <div className="space-y-2.5">
                 <label className="text-sm font-medium text-gray-300 ml-1">
@@ -88,6 +116,7 @@ export default function RegisterForm() {
                     placeholder={t("namePlaceholder")}
                     className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white text-lg placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all duration-300"
                     required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -107,6 +136,7 @@ export default function RegisterForm() {
                     placeholder={t("emailPlaceholder")}
                     className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white text-lg placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all duration-300"
                     required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -126,6 +156,7 @@ export default function RegisterForm() {
                     placeholder={t("passwordPlaceholder")}
                     className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-12 text-white text-lg placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all duration-300"
                     required
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
@@ -139,7 +170,7 @@ export default function RegisterForm() {
 
               <div className="space-y-2.5">
                 <label className="text-sm font-medium text-gray-300 ml-1">
-                  Xác nhận mật khẩu
+                  {t("confirmPasswordLabel")}
                 </label>
                 <div className="relative group/input">
                   <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
@@ -149,9 +180,10 @@ export default function RegisterForm() {
                     type={showConfirmPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Nhập lại mật khẩu"
+                    placeholder={t("confirmPasswordPlaceholder")}
                     className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-12 text-white text-lg placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all duration-300"
                     required
+                    disabled={isLoading}
                   />
                   <button
                     type="button"

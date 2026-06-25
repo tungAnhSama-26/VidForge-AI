@@ -135,6 +135,8 @@
     "emailPlaceholder": "Nhập email của bạn",
     "passwordLabel": "Mật khẩu",
     "passwordPlaceholder": "Tạo mật khẩu",
+    "confirmPasswordLabel": "Xác nhận mật khẩu",
+    "confirmPasswordPlaceholder": "Nhập lại mật khẩu",
     "registerButton": "Đăng ký",
     "orContinueWith": "Hoặc tiếp tục với",
     "googleButton": "Tiếp tục với Google",

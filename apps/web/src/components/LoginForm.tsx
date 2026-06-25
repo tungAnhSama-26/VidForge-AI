@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { Link } from "@/routing";
-import { Mail, Lock, LogIn, Sparkles, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, LogIn, Sparkles, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "@/routing";
@@ -13,9 +13,13 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setIsLoading(true);
     try {
       const res = await signIn("credentials", {
         redirect: false,
@@ -24,14 +28,18 @@ export default function LoginForm() {
         callbackUrl: "/"
       });
       if (res?.error) {
-        alert("Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.");
-      } else {
+        setError("Email hoặc mật khẩu không đúng. Vui lòng thử lại.");
+      } else if (res?.ok) {
         router.push("/");
         router.refresh();
+      } else {
+        setError("Đăng nhập thất bại. Vui lòng thử lại.");
       }
-    } catch (error) {
-      console.error(error);
-      alert("Có lỗi xảy ra");
+    } catch (err) {
+      console.error(err);
+      setError("Có lỗi xảy ra. Vui lòng thử lại.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -53,6 +61,14 @@ export default function LoginForm() {
               </h1>
             </div>
 
+            {/* Inline Error Message */}
+            {error && (
+              <div className="mb-6 flex items-center gap-3 px-5 py-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-7">
               <div className="space-y-2.5">
                 <label className="text-sm font-medium text-gray-300 ml-1">
@@ -69,6 +85,7 @@ export default function LoginForm() {
                     placeholder={t("emailPlaceholder")}
                     className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white text-lg placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all duration-300"
                     required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -93,6 +110,7 @@ export default function LoginForm() {
                     placeholder={t("passwordPlaceholder")}
                     className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-12 text-white text-lg placeholder:text-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-transparent transition-all duration-300"
                     required
+                    disabled={isLoading}
                   />
                   <button
                     type="button"
@@ -106,10 +124,17 @@ export default function LoginForm() {
 
               <button
                 type="submit"
-                className="w-full py-4 mt-4 rounded-2xl bg-white text-black text-lg font-bold flex items-center justify-center gap-2 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(255,255,255,0.3)] transition-all duration-300 group/btn"
+                disabled={isLoading}
+                className="w-full py-4 mt-4 rounded-2xl bg-white text-black text-lg font-bold flex items-center justify-center gap-2 hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(255,255,255,0.3)] transition-all duration-300 group/btn disabled:opacity-70 disabled:hover:scale-100 disabled:hover:translate-y-0 disabled:hover:shadow-none"
               >
-                <LogIn className="w-5 h-5 group-hover/btn:rotate-12 transition-transform" />
-                {t("loginButton")}
+                {isLoading ? (
+                  <span className="animate-spin w-5 h-5 border-2 border-black border-t-transparent rounded-full" />
+                ) : (
+                  <>
+                    <LogIn className="w-5 h-5 group-hover/btn:rotate-12 transition-transform" />
+                    {t("loginButton")}
+                  </>
+                )}
               </button>
             </form>
 
