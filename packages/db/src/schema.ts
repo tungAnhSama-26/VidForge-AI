@@ -27,6 +27,12 @@ export const tenants = pgTable('tenants', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
+export const systemConfigs = pgTable('system_configs', {
+  key: text('key').primaryKey(),
+  value: text('value').notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
 // --- TENANT-ISOLATED TABLES ---
 
 // Mapping Users <-> Tenants (Many-to-Many)

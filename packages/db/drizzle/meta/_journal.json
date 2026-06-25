@@ -36,6 +36,13 @@
       "when": 1782336962128,
       "tag": "0004_spicy_wolfsbane",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1782358221075,
+      "tag": "0005_lumpy_the_hood",
+      "breakpoints": true
     }
   ]
 }
