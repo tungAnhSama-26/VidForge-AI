@@ -35,7 +35,7 @@ export default function RegisterForm() {
 
     setIsLoading(true);
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch("/api/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password })
@@ -43,10 +43,14 @@ export default function RegisterForm() {
       const data = await res.json();
       if (res.ok) {
         setSuccess("Đăng ký thành công! Đang đăng nhập...");
+        // Lấy CSRF token cho NextAuth v5
+        const csrfRes = await fetch("/api/auth/csrf");
+        const { csrfToken } = await csrfRes.json();
         const loginRes = await signIn("credentials", {
           redirect: false,
           email,
           password,
+          csrfToken,
           callbackUrl: "/"
         });
         if (!loginRes?.error) {

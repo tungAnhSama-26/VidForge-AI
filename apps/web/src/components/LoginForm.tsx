@@ -27,6 +27,7 @@ export default function LoginForm() {
         password,
         callbackUrl: "/"
       });
+
       if (res?.error) {
         setError("Email hoặc mật khẩu không đúng. Vui lòng thử lại.");
       } else if (res?.ok) {
@@ -174,23 +175,14 @@ export default function LoginForm() {
 
         {/* Right Side: Interactive Visual Panel */}
         <div className="hidden md:flex flex-1 w-full min-h-[600px] relative rounded-[2rem] overflow-hidden group/right shadow-inner">
-          {/* Base Background Image */}
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover/right:opacity-70 transition-all duration-1000 group-hover/right:scale-110" />
-          
-          {/* Color Overlays */}
           <div className="absolute inset-0 bg-gradient-to-br from-purple-900/60 via-black/40 to-blue-900/60 mix-blend-multiply group-hover/right:opacity-50 transition-opacity duration-1000" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-          
-          {/* Decorative Elements */}
           <div className="absolute top-10 right-10 w-24 h-24 bg-pink-500/20 blur-[30px] rounded-full group-hover/right:bg-pink-500/40 group-hover/right:scale-150 transition-all duration-1000" />
           <div className="absolute bottom-20 left-10 w-32 h-32 bg-blue-500/20 blur-[40px] rounded-full group-hover/right:bg-blue-500/40 group-hover/right:scale-150 transition-all duration-1000" />
-          
-          {/* Floating Icon Centerpiece */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-white/5 backdrop-blur-xl border border-white/20 flex items-center justify-center shadow-[0_0_40px_rgba(168,85,247,0.3)] group-hover/right:shadow-[0_0_80px_rgba(236,72,153,0.6)] group-hover/right:scale-110 group-hover/right:-translate-y-[60%] transition-all duration-700 ease-out z-20">
             <Sparkles className="w-12 h-12 text-white/80 group-hover/right:text-pink-400 group-hover/right:rotate-12 group-hover:scale-110 transition-all duration-500" />
           </div>
-
-          {/* Hidden Content Revealed on Hover */}
           <div className="absolute bottom-0 left-0 w-full p-12 translate-y-8 group-hover/right:translate-y-0 opacity-0 group-hover/right:opacity-100 transition-all duration-700 ease-out z-20">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm font-medium mb-6 animate-pulse-slow">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">VidForge.AI</span>
@@ -202,8 +194,6 @@ export default function LoginForm() {
               Generate stunning video scripts and hyper-realistic images in seconds.
             </p>
           </div>
-          
-          {/* Grid lines overlay for tech feel */}
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-overlay z-30" />
         </div>
 
