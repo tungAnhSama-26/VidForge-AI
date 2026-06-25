@@ -16,6 +16,7 @@ export default function ChatHistory() {
   const [loading, setLoading] = useState(true);
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations("Chat");
 
   useEffect(() => {
     fetch("/api/chat")
@@ -42,12 +43,12 @@ export default function ChatHistory() {
     <div className="mt-4 flex flex-col h-1/2 overflow-hidden border-t border-white/10 pt-4">
       <div className="flex items-center justify-between px-3 mb-2">
         <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">
-          Lịch sử Chat
+          {t("history")}
         </span>
         <button 
           onClick={handleNewChat}
           className="text-white/50 hover:text-white transition-colors p-1"
-          title="Tạo Chat Mới"
+          title={t("newChat")}
         >
           <Plus className="w-4 h-4" />
         </button>
@@ -60,7 +61,7 @@ export default function ChatHistory() {
           </div>
         ) : sessions.length === 0 ? (
           <div className="text-xs text-white/40 px-2 py-3 text-center">
-            Chưa có đoạn chat nào.
+            {t("noChats")}
           </div>
         ) : (
           sessions.map((session) => {

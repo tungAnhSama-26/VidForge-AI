@@ -164,5 +164,15 @@
     "adminLogs": "Nhật ký Hệ thống",
     "adminConfig": "Cấu hình Hệ thống",
     "logout": "Đăng xuất"
+  },
+  "Chat": {
+    "history": "Lịch sử Chat",
+    "newChat": "Tạo Chat Mới",
+    "closeSidebar": "Đóng sidebar",
+    "search": "Tìm đoạn chat...",
+    "today": "Hôm nay",
+    "previous7Days": "7 ngày trước",
+    "older": "Cũ hơn",
+    "noChats": "Chưa có đoạn chat nào."
   }
 }

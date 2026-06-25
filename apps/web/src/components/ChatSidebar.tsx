@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useRouter, usePathname } from "@/routing";
 import { MessageSquare, Plus, Loader2, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { format, isToday, isYesterday, isThisWeek, parseISO } from "date-fns";
+import { useTranslations } from "next-intl";
 
 interface ChatSession {
   id: string;
@@ -17,6 +18,7 @@ export default function ChatSidebar({ currentSessionId }: { currentSessionId?: s
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
+  const t = useTranslations("Chat");
 
   useEffect(() => {
     fetch("/api/chat")
@@ -35,10 +37,9 @@ export default function ChatSidebar({ currentSessionId }: { currentSessionId?: s
 
   const groupSessions = () => {
     const groups: { [key: string]: ChatSession[] } = {
-      "Hôm nay": [],
-      "Hôm qua": [],
-      "7 ngày trước": [],
-      "Cũ hơn": []
+      [t("today")]: [],
+      [t("previous7Days")]: [],
+      [t("older")]: []
     };
 
     const filteredSessions = sessions.filter(s => 
@@ -47,10 +48,9 @@ export default function ChatSidebar({ currentSessionId }: { currentSessionId?: s
 
     filteredSessions.forEach(session => {
       const date = parseISO(session.createdAt);
-      if (isToday(date)) groups["Hôm nay"].push(session);
-      else if (isYesterday(date)) groups["Hôm qua"].push(session);
-      else if (isThisWeek(date)) groups["7 ngày trước"].push(session);
-      else groups["Cũ hơn"].push(session);
+      if (isToday(date) || isYesterday(date)) groups[t("today")].push(session);
+      else if (isThisWeek(date)) groups[t("previous7Days")].push(session);
+      else groups[t("older")].push(session);
     });
 
     return groups;
@@ -79,14 +79,14 @@ export default function ChatSidebar({ currentSessionId }: { currentSessionId?: s
         <button 
           onClick={() => setIsOpen(false)}
           className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/5 transition-colors"
-          title="Đóng sidebar"
+          title={t("closeSidebar")}
         >
           <PanelLeftClose className="w-5 h-5" />
         </button>
         <button 
           onClick={handleNewChat}
           className="flex-1 flex items-center justify-end gap-2 p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 transition-colors"
-          title="Tạo chat mới"
+          title={t("newChat")}
         >
           <Plus className="w-5 h-5" />
         </button>
@@ -95,7 +95,7 @@ export default function ChatSidebar({ currentSessionId }: { currentSessionId?: s
       <div className="px-3 pb-2">
         <input 
           type="text" 
-          placeholder="Tìm đoạn chat..." 
+          placeholder={t("search")} 
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-white/30 transition-colors"
@@ -109,7 +109,7 @@ export default function ChatSidebar({ currentSessionId }: { currentSessionId?: s
           </div>
         ) : sessions.length === 0 ? (
           <div className="text-sm text-white/40 px-2 py-3">
-            Chưa có đoạn chat nào.
+            {t("noChats")}
           </div>
         ) : (
           Object.entries(groups).map(([label, groupSessions]) => {

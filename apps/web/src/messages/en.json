@@ -164,5 +164,15 @@
     "adminLogs": "System Logs",
     "adminConfig": "System Config",
     "logout": "Sign out"
+  },
+  "Chat": {
+    "history": "Chat History",
+    "newChat": "New Chat",
+    "closeSidebar": "Close Sidebar",
+    "search": "Search chats...",
+    "today": "Today",
+    "previous7Days": "Previous 7 days",
+    "older": "Older",
+    "noChats": "No chats found."
   }
 }
