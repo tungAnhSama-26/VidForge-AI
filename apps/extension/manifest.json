@@ -22,7 +22,7 @@
   ],
   "host_permissions": [
     "<all_urls>",
-    "https://vidforge-ai.duckdns.org/*"
+    "https://vidforge-ai.duckdns.org/?action=chat"
   ],
   "background": {
     "service_worker": "background.js"
