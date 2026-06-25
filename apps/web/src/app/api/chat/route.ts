@@ -201,38 +201,72 @@ export async function POST(request: Request) {
     }
 
     let text = "";
-    try {
-      let currentModel = "llama-3.3-70b-versatile";
-      let payloadMessages = messagesForOpenAI;
-      let endpoint = "https://api.groq.com/openai/v1/chat/completions";
-      let currentApiKey = apiKey;
-      
-      if (hasImages) {
-        currentModel = "gemini-2.5-flash";
-        endpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
-        currentApiKey = process.env.GEMINI_API_KEY || apiKey;
-      } else {
-        // Groq text-only models require content to be a string
-        payloadMessages = messagesForOpenAI.map(m => {
-          if (Array.isArray(m.content)) {
-            return { ...m, content: m.content.map((c: any) => c.text || "").join("\n") };
-          }
-          return m;
-        });
-      }
-
+    
+    // Helper: call a single endpoint and return parsed data
+    async function callAI(endpoint: string, model: string, key: string, msgs: any[]) {
       const res = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${currentApiKey}` },
-        body: JSON.stringify({
-          model: currentModel,
-          messages: payloadMessages,
-          max_tokens: 4096,
-          temperature: 0.7
-        })
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${key}` },
+        body: JSON.stringify({ model, messages: msgs, max_tokens: 4096, temperature: 0.7 })
       });
-      const data = await res.json();
-      
+      return res.json();
+    }
+
+    // Helper: check if error is a rate limit / overload error
+    function isOverloadError(data: any): boolean {
+      const msg = data?.error?.message || "";
+      return (
+        msg.toLowerCase().includes("high demand") ||
+        msg.toLowerCase().includes("overloaded") ||
+        msg.toLowerCase().includes("rate limit") ||
+        msg.toLowerCase().includes("503") ||
+        data?.error?.code === 503 ||
+        data?.error?.status === "UNAVAILABLE"
+      );
+    }
+
+    try {
+      const groqEndpoint = "https://api.groq.com/openai/v1/chat/completions";
+      const geminiEndpoint = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+      const geminiKey = process.env.GEMINI_API_KEY || apiKey;
+
+      // Prepare groq-safe messages (content must be string)
+      const groqMessages = messagesForOpenAI.map((m: any) => {
+        if (Array.isArray(m.content)) {
+          return { ...m, content: m.content.map((c: any) => c.text || "").join("\n") };
+        }
+        return m;
+      });
+
+      let data: any = null;
+
+      if (hasImages) {
+        // Images: try Groq vision first (no rate limit issues), fallback to Gemini
+        data = await callAI(groqEndpoint, "llama-3.2-90b-vision-preview", apiKey, messagesForOpenAI);
+
+        if (data?.error) {
+          console.warn("[chat] Groq vision failed:", data.error.message, "— trying Gemini vision...");
+          const delays = [1500, 4000];
+          for (let attempt = 0; attempt <= delays.length; attempt++) {
+            if (attempt > 0) {
+              await new Promise(r => setTimeout(r, delays[attempt - 1]));
+            }
+            data = await callAI(geminiEndpoint, "gemini-2.5-flash", geminiKey, messagesForOpenAI);
+            if (!isOverloadError(data)) break;
+            console.warn(`[chat] Gemini overloaded (attempt ${attempt + 1}), retrying...`);
+          }
+        }
+      } else {
+        // Text only: use Groq, fallback to Gemini if Groq fails
+        data = await callAI(groqEndpoint, "llama-3.3-70b-versatile", apiKey, groqMessages);
+
+        if (data?.error) {
+          console.warn("[chat] Groq failed, trying Gemini fallback...");
+          data = await callAI(geminiEndpoint, "gemini-2.5-flash", geminiKey, messagesForOpenAI);
+        }
+      }
+
+      // Error handling
       if (Array.isArray(data) && data[0]?.error) {
         let msg = data[0].error.message || JSON.stringify(data[0].error);
         if (msg.includes("Invalid Auth key") || msg.includes("API key not valid")) {
@@ -240,18 +274,21 @@ export async function POST(request: Request) {
         }
         throw new Error(`Gemini API Error: ${msg}`);
       }
-      if (data.error) {
+      if (data?.error) {
         let msg = data.error.message || JSON.stringify(data.error);
         if (msg.includes("Invalid API Key")) {
-           msg = "API Key Groq không hợp lệ. Vui lòng kiểm tra lại file .env";
+          msg = "API Key Groq không hợp lệ. Vui lòng kiểm tra lại file .env";
+        }
+        if (isOverloadError(data)) {
+          msg = "AI đang quá tải, vui lòng thử lại sau vài giây.";
         }
         throw new Error(`API Error: ${msg}`);
       }
-      if (!data.choices || !data.choices[0]) {
+      if (!data?.choices?.[0]) {
         console.error("Unexpected API Response:", JSON.stringify(data));
         throw new Error("Unexpected API response format from AI Provider.");
       }
-      
+
       text = data.choices[0].message.content;
     } catch (apiError: any) {
       console.error('API Error:', apiError);
