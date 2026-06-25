@@ -20,7 +20,7 @@ interface GenerateInputProps {
   attachments: Attachment[];
   removeAttachment: (index: number) => void;
   handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
   isRecording: boolean;
   startRecording: () => void;
   stopRecording: () => void;
