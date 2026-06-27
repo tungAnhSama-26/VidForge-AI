@@ -1,22 +1,20 @@
 document.getElementById('start-btn').addEventListener('click', async () => {
   const statusEl = document.getElementById('status');
   statusEl.style.display = 'block';
-  statusEl.innerText = "Đang lấy kịch bản từ web...";
+  statusEl.innerText = "Đang quét kịch bản mới nhất...";
 
-  // Lấy tab hiện tại (chính là trang web vidforge-ai của user)
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-  // Tiêm một đoạn script nhỏ để lấy chữ đang bôi đen trên web
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
-    function: getSelectionText,
+    function: getLatestScript,
   }, (injectionResults) => {
     if (!injectionResults || !injectionResults[0]) return;
     
-    const selectedText = injectionResults[0].result;
+    const scriptText = injectionResults[0].result;
     
-    if (!selectedText || selectedText.trim() === "") {
-      statusEl.innerText = "Lỗi: Bạn chưa bôi đen kịch bản nào trên web cả!";
+    if (!scriptText || scriptText.trim() === "") {
+      statusEl.innerText = "Lỗi: Không tìm thấy kịch bản nào trên trang này!";
       statusEl.style.color = "red";
       return;
     }
@@ -24,9 +22,8 @@ document.getElementById('start-btn').addEventListener('click', async () => {
     statusEl.innerText = "Đã lấy được kịch bản! Đang mở Grok...";
     statusEl.style.color = "green";
 
-    const grokPrompt = `Hãy tạo cho tôi các prompt chi tiết để làm video (hình ảnh và âm thanh) từ kịch bản sau:\n\n${selectedText}`;
+    const grokPrompt = `Hãy tạo cho tôi các prompt chi tiết để làm video (hình ảnh và âm thanh) từ kịch bản sau:\n\n${scriptText}`;
 
-    // Gửi kịch bản về background để mở Grok
     chrome.runtime.sendMessage({
       action: "START_GROK_WORKFLOW",
       prompt: grokPrompt
@@ -34,7 +31,12 @@ document.getElementById('start-btn').addEventListener('click', async () => {
   });
 });
 
-// Hàm này sẽ được chạy trực tiếp trên trang web vidforge-ai.duckdns.org
-function getSelectionText() {
-  return window.getSelection().toString();
+// Hàm này chạy trên trang web vidforge-ai để tìm thẻ <pre> chứa kịch bản mới nhất
+function getLatestScript() {
+  const preElements = document.querySelectorAll('pre');
+  if (preElements.length > 0) {
+    // Lấy thẻ pre cuối cùng (chứa kịch bản mới nhất)
+    return preElements[preElements.length - 1].innerText;
+  }
+  return null;
 }
