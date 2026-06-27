@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "VidForge AI Automator",
-  "version": "1.0",
-  "description": "Tự động hóa luồng làm video với các AI như Grok.",
+  "version": "1.1",
+  "description": "Lấy kịch bản từ VidForge và tự động chạy trên Grok.",
   "permissions": [
     "activeTab",
     "scripting",
@@ -10,7 +10,8 @@
     "storage"
   ],
   "host_permissions": [
-    "https://grok.com/*"
+    "https://grok.com/*",
+    "https://vidforge-ai.duckdns.org/*"
   ],
   "action": {
     "default_popup": "popup.html"
