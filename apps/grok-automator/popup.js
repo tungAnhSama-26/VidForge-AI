@@ -31,12 +31,20 @@ document.getElementById('start-btn').addEventListener('click', async () => {
   });
 });
 
-// Hàm này chạy trên trang web vidforge-ai để tìm thẻ <pre> chứa kịch bản mới nhất
+// Hàm này chạy trên trang web vidforge-ai để tìm kịch bản mới nhất
 function getLatestScript() {
+  // 1. Ưu tiên tìm thẻ pre (nếu kịch bản được định dạng trong đó)
   const preElements = document.querySelectorAll('pre');
-  if (preElements.length > 0) {
-    // Lấy thẻ pre cuối cùng (chứa kịch bản mới nhất)
+  if (preElements.length > 0 && preElements[preElements.length - 1].innerText.trim()) {
     return preElements[preElements.length - 1].innerText;
   }
-  return null;
+  
+  // 2. Dự phòng: Tìm toàn bộ khung chat của AI
+  const aiMessages = document.querySelectorAll('.bg-transparent.text-white');
+  if (aiMessages.length > 0 && aiMessages[aiMessages.length - 1].innerText.trim()) {
+    return aiMessages[aiMessages.length - 1].innerText;
+  }
+
+  // 3. Dự phòng cuối: Lấy chữ mà người dùng đang bôi đen
+  return window.getSelection().toString();
 }
