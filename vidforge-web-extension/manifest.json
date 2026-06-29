@@ -9,7 +9,9 @@
     "128": "icon128.png"
   },
   "action": {
-    "default_popup": "popup.html",
     "default_title": "Mở VidForge AI"
+  },
+  "background": {
+    "service_worker": "background.js"
   }
 }

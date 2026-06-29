@@ -6,11 +6,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       
       let textContent = '';
       const article = document.querySelector('article');
-      if (article) {
+      const main = document.querySelector('main');
+      
+      if (article && article.innerText.length > 100) {
         textContent = article.innerText;
+      } else if (main && main.innerText.length > 100) {
+        textContent = main.innerText;
       } else {
-        const paragraphs = Array.from(document.querySelectorAll('p'));
-        textContent = paragraphs.map(p => p.innerText).join('\n\n');
+        // Lấy các thẻ chứa chữ trong các web chat AI (Grok, ChatGPT, AI Studio...)
+        const chatElements = Array.from(document.querySelectorAll('p, [dir="auto"], .message'));
+        if (chatElements.length > 0) {
+          textContent = chatElements.map(el => el.innerText).join('\n\n');
+        }
+        
+        // Fallback: Lấy toàn bộ text trên trang nếu vẫn không tìm thấy
+        if (!textContent || textContent.trim().length < 50) {
+          textContent = document.body.innerText;
+        }
       }
 
       if (textContent.length > 5000) {
