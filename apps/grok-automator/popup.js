@@ -74,7 +74,7 @@ document.getElementById('start-btn').addEventListener('click', async () => {
     scriptPreview.value = scriptText;
     resultContainer.style.display = 'block';
 
-    const grokPrompt = `Hãy tạo cho tôi các prompt chi tiết để làm video (hình ảnh và âm thanh) từ kịch bản sau:\n\n${scriptText}`;
+    const grokPrompt = scriptText;
 
     // Gắn sự kiện cho nút Tạo Video
     document.getElementById('grok-btn').onclick = () => {
