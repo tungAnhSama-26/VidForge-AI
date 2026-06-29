@@ -24,14 +24,32 @@ document.getElementById('start-btn').addEventListener('click', async () => {
     return;
   }
 
+  // Bắt lỗi nếu tab hiện tại là các trang cấm của trình duyệt
+  if (tab.url && (tab.url.startsWith('chrome://') || tab.url.startsWith('edge://') || tab.url.startsWith('about:'))) {
+    statusEl.innerHTML = "❌ Extension không thể lấy kịch bản từ trang này.<br><br>👉 <b>Mẹo:</b> Hãy vào trang chứa kịch bản (ví dụ <a href='#' id='open-vidforge' style='color:blue;text-decoration:underline;'>VidForge AI</a>) trước nhé!";
+    statusEl.style.color = "#d32f2f";
+    
+    // Đợi 1 chút để DOM cập nhật rồi mới gán event
+    setTimeout(() => {
+      const link = document.getElementById('open-vidforge');
+      if (link) {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          chrome.tabs.create({ url: "https://vidforge-ai.duckdns.org/" });
+        });
+      }
+    }, 50);
+    return;
+  }
+
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
     function: getLatestScript,
   }, (injectionResults) => {
     if (chrome.runtime.lastError) {
       const errMsg = chrome.runtime.lastError.message || "Không rõ nguyên nhân";
-      statusEl.innerText = `Lỗi Chrome từ chối đọc: ${errMsg}. Mẹo: Hãy vào thẳng trang VidForge rồi F5 lại nhé!`;
-      statusEl.style.color = "red";
+      statusEl.innerHTML = `❌ Trình duyệt chặn quyền truy cập trang này.<br>Chi tiết: ${errMsg}<br><br>👉 Hãy thử F5 tải lại trang hoặc mở trang VidForge nhé!`;
+      statusEl.style.color = "#d32f2f";
       return;
     }
 
