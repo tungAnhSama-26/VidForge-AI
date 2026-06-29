@@ -54,7 +54,6 @@ document.getElementById('start-btn').addEventListener('click', async () => {
   });
 });
 
-// Hàm này chạy trên trang web vidforge-ai (hoặc bất kỳ web nào) để tìm kịch bản
 function getLatestScript() {
   // 0. Ưu tiên cao nhất: Lấy chữ mà người dùng đang bôi đen
   const selectedText = window.getSelection().toString();
@@ -67,15 +66,12 @@ function getLatestScript() {
   }
 
   // 2. CHUẨN VIDFORGE: Tìm tin nhắn chat của AI mới nhất (nền trong suốt)
-  // Lấy thẻ div chứa text của AI
   const vfAiMessages = document.querySelectorAll('.bg-transparent.text-white, .p-4.rounded-3xl');
   if (vfAiMessages.length > 0) {
-    // Tìm message cuối cùng không phải là của user (user là bg-white/10)
     for (let i = vfAiMessages.length - 1; i >= 0; i--) {
       const el = vfAiMessages[i];
       if (!el.className.includes('bg-white/10')) {
         const text = el.innerText.trim();
-        // Lọc bỏ những chữ quá ngắn hoặc chứa chữ cookie
         if (text.length > 20 && !text.toLowerCase().includes('cookie')) {
            return text;
         }
@@ -96,14 +92,17 @@ function getLatestScript() {
     if (lastMsg.length > 10 && !lastMsg.toLowerCase().includes('cookie')) return lastMsg;
   }
 
-  // 5. Dự phòng cuối cùng: Lấy đoạn văn dài nhất trên trang (tránh footer/cookie)
+  // 5. Dự phòng cuối cùng: Lấy đoạn văn dài nhất
   const paragraphs = Array.from(document.querySelectorAll('p, div'))
     .filter(p => p.innerText.length > 50 && !p.innerText.toLowerCase().includes('cookies allow us'));
   
   if (paragraphs.length > 0) {
-    // Lấy đoạn cuối cùng thỏa mãn
     return paragraphs[paragraphs.length - 1].innerText.trim();
   }
 
-  return document.body.innerText.trim();
+  const fallbackText = document.body.innerText.trim();
+  if (fallbackText === "VidForge AI" || fallbackText.length < 20) {
+    return "[LỖI]: Không tìm thấy kịch bản nào trên màn hình!\n\nHướng dẫn: Bạn hãy dùng chuột BÔI ĐEN (highlight) đoạn chữ bạn muốn lấy, sau đó bấm lại nút 'Lấy Kịch Bản' nhé.";
+  }
+  return fallbackText;
 }
