@@ -76,11 +76,11 @@ document.getElementById('start-btn').addEventListener('click', async () => {
 
     const grokPrompt = `Hãy tạo cho tôi các prompt chi tiết để làm video (hình ảnh và âm thanh) từ kịch bản sau:\n\n${scriptText}`;
 
-    // Gắn sự kiện cho nút Mở Grok
+    // Gắn sự kiện cho nút Mở Gemini
     document.getElementById('grok-btn').onclick = () => {
-      document.getElementById('grok-btn').innerText = "Đang mở Grok...";
+      document.getElementById('grok-btn').innerText = "Đang mở Gemini...";
       chrome.runtime.sendMessage({
-        action: "START_GROK_WORKFLOW",
+        action: "START_GEMINI_WORKFLOW",
         prompt: grokPrompt
       });
     };

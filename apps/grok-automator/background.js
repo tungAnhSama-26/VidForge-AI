@@ -1,18 +1,18 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "START_GROK_WORKFLOW") {
-    // 1. Lưu prompt vào storage và đánh dấu trạng thái đang chạy Grok
+  if (request.action === "START_GEMINI_WORKFLOW") {
+    // 1. Lưu prompt vào storage và đánh dấu trạng thái đang chạy Gemini
     chrome.storage.local.set({ 
         currentPrompt: request.prompt, 
-        workflowStep: "GROK_GENERATING" 
+        workflowStep: "GEMINI_GENERATING" 
     }, () => {
-      // 2. Mở tab Grok
-      chrome.tabs.create({ url: "https://grok.com/" });
+      // 2. Mở tab Gemini
+      chrome.tabs.create({ url: "https://gemini.google.com/app" });
     });
   }
   
-  if (request.action === "GROK_FINISHED") {
+  if (request.action === "GEMINI_FINISHED") {
     const script = request.result;
-    console.log("Kịch bản thu được từ Grok:", script);
+    console.log("Kịch bản thu được từ Gemini:", script);
     
     // Lưu kịch bản vào storage và chuyển sang bước tiếp theo
     chrome.storage.local.set({ 

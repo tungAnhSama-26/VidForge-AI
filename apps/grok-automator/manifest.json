@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "VidForge AI Automator",
   "version": "1.1",
-  "description": "Lấy kịch bản từ VidForge và tự động chạy trên Grok.",
+  "description": "Lấy kịch bản từ VidForge và tự động chạy trên Google Gemini.",
   "permissions": [
     "activeTab",
     "scripting",
@@ -31,8 +31,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://grok.com/*",
-        "https://x.com/i/grok*"
+        "https://gemini.google.com/*"
       ],
       "js": ["content.js"],
       "run_at": "document_idle"

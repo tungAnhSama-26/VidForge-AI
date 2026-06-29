@@ -36,11 +36,11 @@ function waitForElement(selector, timeout = 10000) {
     });
 }
 
-async function runGrokAutomation() {
+async function runGeminiAutomation() {
     chrome.storage.local.get(['currentPrompt', 'workflowStep'], async (data) => {
-        if (data.workflowStep !== "GROK_GENERATING" || !data.currentPrompt) return;
+        if (data.workflowStep !== "GEMINI_GENERATING" || !data.currentPrompt) return;
         
-        console.log("VidForge: Đang tự động hóa Grok...");
+        console.log("VidForge: Đang tự động hóa Gemini...");
         
         // Copy sẵn vào Clipboard (đề phòng bot tạch thì người dùng bấm Ctrl+V cho nhanh)
         try {
@@ -48,11 +48,11 @@ async function runGrokAutomation() {
             console.log("VidForge: Đã copy sẵn prompt vào clipboard dự phòng.");
         } catch(e) {}
 
-        // 1. Tìm ô nhập liệu của Grok (textarea hoặc contenteditable) - Tăng thời gian chờ lên 20s
-        const inputElement = await waitForElement("textarea, [contenteditable='true'], [role='textbox'], #prompt-textarea", 20000); 
+        // 1. Tìm ô nhập liệu của Gemini (textarea hoặc contenteditable) - Tăng thời gian chờ lên 20s
+        const inputElement = await waitForElement("rich-textarea > div[contenteditable='true'], .ql-editor, textarea, [contenteditable='true'], [role='textbox']", 20000); 
         if (!inputElement) {
-            console.error("VidForge: Không tìm thấy ô nhập chữ trên Grok.");
-            alert("VidForge: Lỗi - Không tìm thấy ô chat của Grok. Tuy nhiên kịch bản đã được COPY SẴN, bạn chỉ cần bấm Ctrl+V vào ô chat là xong!");
+            console.error("VidForge: Không tìm thấy ô nhập chữ trên Gemini.");
+            alert("VidForge: Lỗi - Không tìm thấy ô chat của Gemini. Tuy nhiên kịch bản đã được COPY SẴN, bạn chỉ cần bấm Ctrl+V vào ô chat là xong!");
             return;
         }
 
@@ -72,37 +72,37 @@ async function runGrokAutomation() {
             // Tìm nút Send (các nút SVG hoặc button bên cạnh)
             const parent = inputElement.parentElement ? inputElement.parentElement.parentElement : document;
             const buttons = parent.querySelectorAll('button');
-            const submitBtn = Array.from(buttons).find(b => b.innerHTML.includes('svg') || b.innerText.toLowerCase().includes('send') || b.getAttribute('aria-label') === 'Gửi');
+            const submitBtn = Array.from(buttons).find(b => b.innerHTML.includes('svg') || b.innerText.toLowerCase().includes('send') || b.getAttribute('aria-label')?.includes('Gửi') || b.getAttribute('aria-label')?.includes('Send'));
             if (submitBtn) submitBtn.click();
             
-            chrome.storage.local.set({ workflowStep: "GROK_WAITING_RESULT" });
+            chrome.storage.local.set({ workflowStep: "GEMINI_WAITING_RESULT" });
             
-            // 4. Chờ Grok trả lời và thu thập kết quả
+            // 4. Chờ Gemini trả lời và thu thập kết quả
             waitForResponse();
         }, 1500);
     });
 }
 
 async function waitForResponse() {
-    console.log("VidForge: Đang chờ Grok tạo câu trả lời...");
+    console.log("VidForge: Đang chờ Gemini tạo câu trả lời...");
     
     let lastLength = 0;
     let unchangedTime = 0;
     
-    // Quét liên tục mỗi giây để xem Grok đã gõ xong chưa
+    // Quét liên tục mỗi giây để xem Gemini đã gõ xong chưa
     const checkInterval = setInterval(() => {
-        // Trên Grok/X, nội dung chat thường nằm trong các thẻ div có dir="auto" hoặc class prose
-        const messageElements = document.querySelectorAll('.prose, [dir="auto"]');
+        // Trên Gemini, nội dung chat thường nằm trong model-response hoặc .message-content
+        const messageElements = document.querySelectorAll('model-response, .message-content, .prose, [dir="auto"]');
         
         if (messageElements.length > 0) {
             const currentText = Array.from(messageElements).map(el => el.innerText).join('\n');
             
-            // Nếu text không đổi trong 4 giây liên tiếp -> Grok đã viết xong
+            // Nếu text không đổi trong 4 giây liên tiếp -> Gemini đã viết xong
             if (currentText.length > 50 && currentText.length === lastLength) {
                 unchangedTime += 1000;
                 if (unchangedTime >= 4000) {
                     clearInterval(checkInterval);
-                    finishGrok();
+                    finishGemini();
                 }
             } else {
                 lastLength = currentText.length;
@@ -112,18 +112,18 @@ async function waitForResponse() {
     }, 1000);
 }
 
-function finishGrok() {
+function finishGemini() {
     // Lấy câu trả lời mới nhất (câu cuối cùng trong khung chat)
-    const blocks = document.querySelectorAll('.prose, [dir="auto"]');
+    const blocks = document.querySelectorAll('model-response, .message-content, .prose, [dir="auto"]');
     if (blocks.length === 0) return;
     
-    // Grok trả về nhiều block, ta lấy block của AI (thường là block cuối cùng chứa nội dung dài)
+    // Gemini trả về nhiều block, ta lấy block của AI (thường là block cuối cùng chứa nội dung dài)
     const finalScript = blocks[blocks.length - 1].innerText;
     
-    console.log("VidForge: Lấy được kịch bản từ Grok:\n", finalScript);
-    chrome.runtime.sendMessage({ action: "GROK_FINISHED", result: finalScript });
-    alert("VidForge: Đã tạo xong kịch bản tự động trên Grok! Sẵn sàng sang bước tạo Video.");
+    console.log("VidForge: Lấy được kịch bản từ Gemini:\n", finalScript);
+    chrome.runtime.sendMessage({ action: "GEMINI_FINISHED", result: finalScript });
+    alert("VidForge: Đã tạo xong kịch bản tự động trên Gemini! Sẵn sàng sang bước tạo Video.");
 }
 
 // Bắt đầu khi load trang
-runGrokAutomation();
+runGeminiAutomation();
