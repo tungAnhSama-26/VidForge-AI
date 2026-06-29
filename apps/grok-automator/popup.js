@@ -65,11 +65,21 @@ function getLatestScript() {
     return vfScripts[vfScripts.length - 1].innerText.trim();
   }
 
-  // 2. CHUẨN VIDFORGE: Tìm tin nhắn chat của AI mới nhất (trường hợp không có khung kịch bản)
-  const vfAiMessages = document.querySelectorAll('.bg-transparent.text-white');
+  // 2. CHUẨN VIDFORGE: Tìm tin nhắn chat của AI mới nhất (nền trong suốt)
+  // Lấy thẻ div chứa text của AI
+  const vfAiMessages = document.querySelectorAll('.bg-transparent.text-white, .p-4.rounded-3xl');
   if (vfAiMessages.length > 0) {
-    const lastMsg = vfAiMessages[vfAiMessages.length - 1].innerText.trim();
-    if (lastMsg.length > 10) return lastMsg;
+    // Tìm message cuối cùng không phải là của user (user là bg-white/10)
+    for (let i = vfAiMessages.length - 1; i >= 0; i--) {
+      const el = vfAiMessages[i];
+      if (!el.className.includes('bg-white/10')) {
+        const text = el.innerText.trim();
+        // Lọc bỏ những chữ quá ngắn hoặc chứa chữ cookie
+        if (text.length > 20 && !text.toLowerCase().includes('cookie')) {
+           return text;
+        }
+      }
+    }
   }
 
   // 3. DỰ PHÒNG CÁC WEB KHÁC: Tìm thẻ pre chung
@@ -82,12 +92,15 @@ function getLatestScript() {
   const aiMessages = document.querySelectorAll('.prose, .markdown, .message, article');
   if (aiMessages.length > 0) {
     const lastMsg = aiMessages[aiMessages.length - 1].innerText.trim();
-    if (lastMsg.length > 10) return lastMsg;
+    if (lastMsg.length > 10 && !lastMsg.toLowerCase().includes('cookie')) return lastMsg;
   }
 
-  // 5. Dự phòng cuối cùng: Lấy đoạn văn cuối cùng trên trang thay vì gom toàn bộ
-  const paragraphs = Array.from(document.querySelectorAll('p')).filter(p => p.innerText.length > 30);
+  // 5. Dự phòng cuối cùng: Lấy đoạn văn dài nhất trên trang (tránh footer/cookie)
+  const paragraphs = Array.from(document.querySelectorAll('p, div'))
+    .filter(p => p.innerText.length > 50 && !p.innerText.toLowerCase().includes('cookies allow us'));
+  
   if (paragraphs.length > 0) {
+    // Lấy đoạn cuối cùng thỏa mãn
     return paragraphs[paragraphs.length - 1].innerText.trim();
   }
 
