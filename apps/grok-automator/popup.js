@@ -7,7 +7,22 @@ document.getElementById('start-btn').addEventListener('click', async () => {
   statusEl.innerText = "Đang tìm kịch bản mới nhất...";
   resultContainer.style.display = 'none';
 
-  let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  // Tìm tất cả các tab đang mở
+  let tabs = await chrome.tabs.query({});
+  
+  // Ưu tiên tìm tab có chứa chữ vidforge hoặc localhost
+  let tab = tabs.find(t => t.url && (t.url.includes('vidforge') || t.url.includes('localhost')));
+  
+  // Nếu không thấy, lấy tab đang active hiện tại
+  if (!tab) {
+    let activeTabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    tab = activeTabs[0];
+  }
+
+  if (!tab || !tab.id) {
+    statusEl.innerText = "Không tìm thấy tab nào hợp lệ.";
+    return;
+  }
 
   chrome.scripting.executeScript({
     target: { tabId: tab.id },
@@ -15,7 +30,7 @@ document.getElementById('start-btn').addEventListener('click', async () => {
   }, (injectionResults) => {
     if (chrome.runtime.lastError) {
       const errMsg = chrome.runtime.lastError.message || "Không rõ nguyên nhân";
-      statusEl.innerText = `Lỗi Chrome từ chối đọc: ${errMsg}. Mẹo: Hãy thử nhấn F5 tải lại trang web này rồi bấm lại!`;
+      statusEl.innerText = `Lỗi Chrome từ chối đọc: ${errMsg}. Mẹo: Hãy vào thẳng trang VidForge rồi F5 lại nhé!`;
       statusEl.style.color = "red";
       return;
     }
