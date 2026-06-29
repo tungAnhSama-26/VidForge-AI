@@ -1,14 +1,20 @@
 // Hàm giả lập gõ phím cho các web app dùng React/Vue/Svelte
 function setNativeValue(element, value) {
-    const valueSetter = Object.getOwnPropertyDescriptor(element, 'value').set;
-    const prototype = Object.getPrototypeOf(element);
-    const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
-    
-    if (valueSetter && valueSetter !== prototypeValueSetter) {
-        prototypeValueSetter.call(element, value);
+    if (element.tagName === 'TEXTAREA' || element.tagName === 'INPUT') {
+        const valueSetter = Object.getOwnPropertyDescriptor(element, 'value').set;
+        const prototype = Object.getPrototypeOf(element);
+        const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
+        
+        if (valueSetter && valueSetter !== prototypeValueSetter) {
+            prototypeValueSetter.call(element, value);
+        } else {
+            valueSetter.call(element, value);
+        }
     } else {
-        valueSetter.call(element, value);
+        // Dành cho contenteditable (div)
+        element.textContent = value;
     }
+    
     element.dispatchEvent(new Event('input', { bubbles: true }));
     element.dispatchEvent(new Event('change', { bubbles: true }));
 }
@@ -36,32 +42,35 @@ async function runGrokAutomation() {
         
         console.log("VidForge: Đang tự động hóa Grok...");
         
-        // 1. Tìm ô nhập liệu của Grok
-        const textarea = await waitForElement("textarea"); 
-        if (!textarea) {
+        // 1. Tìm ô nhập liệu của Grok (textarea hoặc contenteditable)
+        const inputElement = await waitForElement("textarea, [contenteditable='true'], [role='textbox']"); 
+        if (!inputElement) {
             console.error("VidForge: Không tìm thấy ô nhập chữ trên Grok.");
+            alert("VidForge: Lỗi - Không tìm thấy ô chat của Grok. Hãy chắc chắn bạn đã đăng nhập Grok!");
             return;
         }
 
         // 2. Điền Prompt
-        setNativeValue(textarea, data.currentPrompt);
+        setNativeValue(inputElement, data.currentPrompt);
         
         // 3. Giả lập bấm phím Enter để Gửi
         setTimeout(async () => {
             // Thử trigger phím Enter
-            textarea.dispatchEvent(new KeyboardEvent('keydown', { 
+            inputElement.dispatchEvent(new KeyboardEvent('keydown', { 
                 key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true 
             }));
             
-            // Tìm nút Send (thường nằm cạnh textarea) và click vào nếu có
-            const submitBtn = textarea.parentElement.parentElement.querySelector('button');
+            // Tìm nút Send (các nút SVG hoặc button bên cạnh)
+            const parent = inputElement.parentElement ? inputElement.parentElement.parentElement : document;
+            const buttons = parent.querySelectorAll('button');
+            const submitBtn = Array.from(buttons).find(b => b.innerHTML.includes('svg') || b.innerText.toLowerCase().includes('send') || b.getAttribute('aria-label') === 'Gửi');
             if (submitBtn) submitBtn.click();
             
             chrome.storage.local.set({ workflowStep: "GROK_WAITING_RESULT" });
             
             // 4. Chờ Grok trả lời và thu thập kết quả
             waitForResponse();
-        }, 1000);
+        }, 1500);
     });
 }
 
