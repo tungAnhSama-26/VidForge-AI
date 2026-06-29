@@ -10,6 +10,7 @@ function setNativeValue(element, value) {
         valueSetter.call(element, value);
     }
     element.dispatchEvent(new Event('input', { bubbles: true }));
+    element.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 // Chờ Element xuất hiện trên DOM
@@ -30,14 +31,12 @@ function waitForElement(selector, timeout = 10000) {
 }
 
 async function runGrokAutomation() {
-    // Kiểm tra xem có đang ở bước làm việc với Grok không
     chrome.storage.local.get(['currentPrompt', 'workflowStep'], async (data) => {
         if (data.workflowStep !== "GROK_GENERATING" || !data.currentPrompt) return;
         
         console.log("VidForge: Đang tự động hóa Grok...");
         
         // 1. Tìm ô nhập liệu của Grok
-        // Grok hiện tại dùng thẻ textarea để nhập
         const textarea = await waitForElement("textarea"); 
         if (!textarea) {
             console.error("VidForge: Không tìm thấy ô nhập chữ trên Grok.");
@@ -49,11 +48,15 @@ async function runGrokAutomation() {
         
         // 3. Giả lập bấm phím Enter để Gửi
         setTimeout(async () => {
+            // Thử trigger phím Enter
             textarea.dispatchEvent(new KeyboardEvent('keydown', { 
                 key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true 
             }));
             
-            // Cập nhật trạng thái để khỏi gõ lặp đi lặp lại
+            // Tìm nút Send (thường nằm cạnh textarea) và click vào nếu có
+            const submitBtn = textarea.parentElement.parentElement.querySelector('button');
+            if (submitBtn) submitBtn.click();
+            
             chrome.storage.local.set({ workflowStep: "GROK_WAITING_RESULT" });
             
             // 4. Chờ Grok trả lời và thu thập kết quả
@@ -65,26 +68,43 @@ async function runGrokAutomation() {
 async function waitForResponse() {
     console.log("VidForge: Đang chờ Grok tạo câu trả lời...");
     
-    // Ghi chú: Logic chờ thực tế sẽ dùng MutationObserver để biết khi nào nút "Stop" hoặc icon "Copy" xuất hiện.
-    // Ở bản Demo này, chúng ta cho nó đợi 15 giây rồi quét nội dung.
-    setTimeout(() => {
-        // Hầu hết các chatbot dùng class như 'prose' cho phần text markdown
-        // hoặc chúng ta có thể quét các đoạn văn bản (p) trong khu vực chat
-        const messageElements = document.querySelectorAll('.prose, p'); 
+    let lastLength = 0;
+    let unchangedTime = 0;
+    
+    // Quét liên tục mỗi giây để xem Grok đã gõ xong chưa
+    const checkInterval = setInterval(() => {
+        // Trên Grok/X, nội dung chat thường nằm trong các thẻ div có dir="auto" hoặc class prose
+        const messageElements = document.querySelectorAll('.prose, [dir="auto"]');
         
         if (messageElements.length > 0) {
-            // Lấy đoạn văn bản mới nhất (cuối cùng)
-            const resultText = Array.from(messageElements).slice(-5).map(el => el.innerText).join('\\n');
-            console.log("VidForge: Lấy được kịch bản:\\n", resultText);
+            const currentText = Array.from(messageElements).map(el => el.innerText).join('\n');
             
-            // Gửi dữ liệu về Background Script
-            chrome.runtime.sendMessage({ action: "GROK_FINISHED", result: resultText });
-            
-            alert("VidForge: Đã tạo xong kịch bản tự động! Xem console để biết thêm chi tiết.");
-        } else {
-            console.warn("VidForge: Chưa tìm thấy kết quả từ Grok.");
+            // Nếu text không đổi trong 4 giây liên tiếp -> Grok đã viết xong
+            if (currentText.length > 50 && currentText.length === lastLength) {
+                unchangedTime += 1000;
+                if (unchangedTime >= 4000) {
+                    clearInterval(checkInterval);
+                    finishGrok();
+                }
+            } else {
+                lastLength = currentText.length;
+                unchangedTime = 0;
+            }
         }
-    }, 15000);
+    }, 1000);
+}
+
+function finishGrok() {
+    // Lấy câu trả lời mới nhất (câu cuối cùng trong khung chat)
+    const blocks = document.querySelectorAll('.prose, [dir="auto"]');
+    if (blocks.length === 0) return;
+    
+    // Grok trả về nhiều block, ta lấy block của AI (thường là block cuối cùng chứa nội dung dài)
+    const finalScript = blocks[blocks.length - 1].innerText;
+    
+    console.log("VidForge: Lấy được kịch bản từ Grok:\n", finalScript);
+    chrome.runtime.sendMessage({ action: "GROK_FINISHED", result: finalScript });
+    alert("VidForge: Đã tạo xong kịch bản tự động trên Grok! Sẵn sàng sang bước tạo Video.");
 }
 
 // Bắt đầu khi load trang

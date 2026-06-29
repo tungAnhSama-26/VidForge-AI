@@ -1,7 +1,7 @@
 document.getElementById('start-btn').addEventListener('click', async () => {
   const statusEl = document.getElementById('status');
   statusEl.style.display = 'block';
-  statusEl.innerText = "Đang quét kịch bản mới nhất...";
+  statusEl.innerText = "Đang tìm kịch bản mới nhất...";
 
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
@@ -9,13 +9,23 @@ document.getElementById('start-btn').addEventListener('click', async () => {
     target: { tabId: tab.id },
     function: getLatestScript,
   }, (injectionResults) => {
-    if (!injectionResults || !injectionResults[0]) return;
+    if (chrome.runtime.lastError) {
+      statusEl.innerText = "Lỗi: Không thể đọc trang này (Có thể do trang bị hạn chế hoặc bạn đang ở trang trắng).";
+      statusEl.style.color = "red";
+      return;
+    }
+
+    if (!injectionResults || !injectionResults[0]) {
+      statusEl.innerText = "Lỗi: Lỗi hệ thống khi tìm kịch bản.";
+      statusEl.style.color = "red";
+      return;
+    }
     
     const scriptText = injectionResults[0].result;
     
     if (!scriptText || scriptText.trim() === "") {
-      statusEl.innerText = "Lỗi: Không tìm thấy kịch bản nào trên trang này!";
-      statusEl.style.color = "red";
+      statusEl.innerText = "Lỗi: Trang này không có chữ nào (Hoặc bạn hãy thử bôi đen chữ cần lấy rồi bấm lại).";
+      statusEl.style.color = "orange";
       return;
     }
 
@@ -31,20 +41,32 @@ document.getElementById('start-btn').addEventListener('click', async () => {
   });
 });
 
-// Hàm này chạy trên trang web vidforge-ai để tìm kịch bản mới nhất
+// Hàm này chạy trên trang web vidforge-ai (hoặc bất kỳ web nào) để tìm kịch bản
 function getLatestScript() {
-  // 1. Ưu tiên tìm thẻ pre (nếu kịch bản được định dạng trong đó)
+  // 1. Ưu tiên cao nhất: Lấy chữ mà người dùng đang bôi đen
+  const selectedText = window.getSelection().toString();
+  if (selectedText.trim()) return selectedText.trim();
+
+  // 2. Tìm thẻ pre (nếu kịch bản được định dạng trong đó)
   const preElements = document.querySelectorAll('pre');
   if (preElements.length > 0 && preElements[preElements.length - 1].innerText.trim()) {
-    return preElements[preElements.length - 1].innerText;
+    return preElements[preElements.length - 1].innerText.trim();
   }
   
-  // 2. Dự phòng: Tìm toàn bộ khung chat của AI
-  const aiMessages = document.querySelectorAll('.bg-transparent.text-white');
-  if (aiMessages.length > 0 && aiMessages[aiMessages.length - 1].innerText.trim()) {
-    return aiMessages[aiMessages.length - 1].innerText;
+  // 3. Tìm các khung chat (prose, markdown, text-white, message)
+  const aiMessages = document.querySelectorAll('.prose, .markdown, .whitespace-pre-wrap, .message, article');
+  if (aiMessages.length > 0) {
+    // Lấy tin nhắn cuối cùng
+    const lastMsg = aiMessages[aiMessages.length - 1].innerText.trim();
+    if (lastMsg.length > 20) return lastMsg;
   }
 
-  // 3. Dự phòng cuối: Lấy chữ mà người dùng đang bôi đen
-  return window.getSelection().toString();
+  // 4. Lấy các đoạn văn dài
+  const paragraphs = Array.from(document.querySelectorAll('p')).filter(p => p.innerText.length > 30);
+  if (paragraphs.length > 0) {
+    return paragraphs.map(p => p.innerText).join('\n\n');
+  }
+
+  // 5. Dự phòng cuối: Lấy toàn bộ text
+  return document.body.innerText.trim();
 }
