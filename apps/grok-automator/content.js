@@ -42,11 +42,17 @@ async function runGrokAutomation() {
         
         console.log("VidForge: Đang tự động hóa Grok...");
         
-        // 1. Tìm ô nhập liệu của Grok (textarea hoặc contenteditable)
-        const inputElement = await waitForElement("textarea, [contenteditable='true'], [role='textbox']"); 
+        // Copy sẵn vào Clipboard (đề phòng bot tạch thì người dùng bấm Ctrl+V cho nhanh)
+        try {
+            navigator.clipboard.writeText(data.currentPrompt);
+            console.log("VidForge: Đã copy sẵn prompt vào clipboard dự phòng.");
+        } catch(e) {}
+
+        // 1. Tìm ô nhập liệu của Grok (textarea hoặc contenteditable) - Tăng thời gian chờ lên 20s
+        const inputElement = await waitForElement("textarea, [contenteditable='true'], [role='textbox'], #prompt-textarea", 20000); 
         if (!inputElement) {
             console.error("VidForge: Không tìm thấy ô nhập chữ trên Grok.");
-            alert("VidForge: Lỗi - Không tìm thấy ô chat của Grok. Hãy chắc chắn bạn đã đăng nhập Grok!");
+            alert("VidForge: Lỗi - Không tìm thấy ô chat của Grok. Tuy nhiên kịch bản đã được COPY SẴN, bạn chỉ cần bấm Ctrl+V vào ô chat là xong!");
             return;
         }
 
@@ -55,6 +61,9 @@ async function runGrokAutomation() {
         
         // 3. Giả lập bấm phím Enter để Gửi
         setTimeout(async () => {
+            // Focus vào element trước
+            inputElement.focus();
+            
             // Thử trigger phím Enter
             inputElement.dispatchEvent(new KeyboardEvent('keydown', { 
                 key: 'Enter', code: 'Enter', keyCode: 13, which: 13, bubbles: true 

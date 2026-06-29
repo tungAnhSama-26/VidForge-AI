@@ -30,7 +30,10 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://grok.com/*"],
+      "matches": [
+        "https://grok.com/*",
+        "https://x.com/i/grok*"
+      ],
       "js": ["content.js"],
       "run_at": "document_idle"
     }
