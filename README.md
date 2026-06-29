@@ -1,7 +1,4 @@
 # VidForge-AI (Monorepo)
-
-The VidForge-AI project is built with a **Monorepo** architecture using **Turborepo**, combining **CQRS & Hexagonal Architecture**, and utilizing a **Multi-tenant** design. The entire codebase is written in **100% TypeScript**.
-
 ## 🚀 Technologies Used
 - **Package Manager**: `pnpm` & `Turborepo`
 - **Backend/Web**: Next.js (App Router)
@@ -119,5 +116,4 @@ This project is licensed under the **MIT License**. See the [LICENSE](./LICENSE)
 
 ---
 
-<p align="center">Built with ❤️ by the VidForge AI Team</p>
 
