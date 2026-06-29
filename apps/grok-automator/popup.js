@@ -1,7 +1,11 @@
 document.getElementById('start-btn').addEventListener('click', async () => {
   const statusEl = document.getElementById('status');
+  const resultContainer = document.getElementById('result-container');
+  const scriptPreview = document.getElementById('script-preview');
+  
   statusEl.style.display = 'block';
   statusEl.innerText = "Đang tìm kịch bản mới nhất...";
+  resultContainer.style.display = 'none';
 
   let [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
@@ -29,15 +33,23 @@ document.getElementById('start-btn').addEventListener('click', async () => {
       return;
     }
 
-    statusEl.innerText = "Đã lấy được kịch bản! Đang mở Grok...";
+    statusEl.innerText = "Đã lấy được kịch bản thành công!";
     statusEl.style.color = "green";
+    
+    // Hiển thị kịch bản lên UI
+    scriptPreview.value = scriptText;
+    resultContainer.style.display = 'block';
 
     const grokPrompt = `Hãy tạo cho tôi các prompt chi tiết để làm video (hình ảnh và âm thanh) từ kịch bản sau:\n\n${scriptText}`;
 
-    chrome.runtime.sendMessage({
-      action: "START_GROK_WORKFLOW",
-      prompt: grokPrompt
-    });
+    // Gắn sự kiện cho nút Mở Grok
+    document.getElementById('grok-btn').onclick = () => {
+      document.getElementById('grok-btn').innerText = "Đang mở Grok...";
+      chrome.runtime.sendMessage({
+        action: "START_GROK_WORKFLOW",
+        prompt: grokPrompt
+      });
+    };
   });
 });
 
