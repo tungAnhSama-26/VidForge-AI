@@ -14,7 +14,8 @@ document.getElementById('start-btn').addEventListener('click', async () => {
     function: getLatestScript,
   }, (injectionResults) => {
     if (chrome.runtime.lastError) {
-      statusEl.innerText = "Lỗi: Không thể đọc trang này (Có thể do trang bị hạn chế hoặc bạn đang ở trang trắng).";
+      const errMsg = chrome.runtime.lastError.message || "Không rõ nguyên nhân";
+      statusEl.innerText = `Lỗi Chrome từ chối đọc: ${errMsg}. Mẹo: Hãy thử nhấn F5 tải lại trang web này rồi bấm lại!`;
       statusEl.style.color = "red";
       return;
     }
