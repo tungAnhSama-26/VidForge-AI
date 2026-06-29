@@ -10,8 +10,7 @@
     "storage"
   ],
   "host_permissions": [
-    "https://grok.com/*",
-    "https://vidforge-ai.duckdns.org/*"
+    "<all_urls>"
   ],
   "action": {
     "default_popup": "popup.html",
