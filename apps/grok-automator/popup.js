@@ -43,30 +43,41 @@ document.getElementById('start-btn').addEventListener('click', async () => {
 
 // Hàm này chạy trên trang web vidforge-ai (hoặc bất kỳ web nào) để tìm kịch bản
 function getLatestScript() {
-  // 1. Ưu tiên cao nhất: Lấy chữ mà người dùng đang bôi đen
+  // 0. Ưu tiên cao nhất: Lấy chữ mà người dùng đang bôi đen
   const selectedText = window.getSelection().toString();
   if (selectedText.trim()) return selectedText.trim();
 
-  // 2. Tìm thẻ pre (nếu kịch bản được định dạng trong đó)
+  // 1. CHUẨN VIDFORGE: Tìm khung kịch bản (Detailed Script) mới nhất
+  const vfScripts = document.querySelectorAll('pre.whitespace-pre-wrap');
+  if (vfScripts.length > 0 && vfScripts[vfScripts.length - 1].innerText.trim()) {
+    return vfScripts[vfScripts.length - 1].innerText.trim();
+  }
+
+  // 2. CHUẨN VIDFORGE: Tìm tin nhắn chat của AI mới nhất (trường hợp không có khung kịch bản)
+  const vfAiMessages = document.querySelectorAll('.bg-transparent.text-white');
+  if (vfAiMessages.length > 0) {
+    const lastMsg = vfAiMessages[vfAiMessages.length - 1].innerText.trim();
+    if (lastMsg.length > 10) return lastMsg;
+  }
+
+  // 3. DỰ PHÒNG CÁC WEB KHÁC: Tìm thẻ pre chung
   const preElements = document.querySelectorAll('pre');
   if (preElements.length > 0 && preElements[preElements.length - 1].innerText.trim()) {
     return preElements[preElements.length - 1].innerText.trim();
   }
   
-  // 3. Tìm các khung chat (prose, markdown, text-white, message)
-  const aiMessages = document.querySelectorAll('.prose, .markdown, .whitespace-pre-wrap, .message, article');
+  // 4. DỰ PHÒNG CÁC WEB KHÁC: Tìm các khung chat phổ biến
+  const aiMessages = document.querySelectorAll('.prose, .markdown, .message, article');
   if (aiMessages.length > 0) {
-    // Lấy tin nhắn cuối cùng
     const lastMsg = aiMessages[aiMessages.length - 1].innerText.trim();
-    if (lastMsg.length > 20) return lastMsg;
+    if (lastMsg.length > 10) return lastMsg;
   }
 
-  // 4. Lấy các đoạn văn dài
+  // 5. Dự phòng cuối cùng: Lấy đoạn văn cuối cùng trên trang thay vì gom toàn bộ
   const paragraphs = Array.from(document.querySelectorAll('p')).filter(p => p.innerText.length > 30);
   if (paragraphs.length > 0) {
-    return paragraphs.map(p => p.innerText).join('\n\n');
+    return paragraphs[paragraphs.length - 1].innerText.trim();
   }
 
-  // 5. Dự phòng cuối: Lấy toàn bộ text
   return document.body.innerText.trim();
 }
