@@ -29,7 +29,18 @@ export default async function Home({
       <>
         <style dangerouslySetInnerHTML={{ __html: `
           footer { display: none !important; }
-          html, body { overflow: hidden !important; }
+          html, body { 
+            overflow: hidden !important; 
+            height: 100dvh !important; 
+            max-height: 100dvh !important;
+          }
+          /* Constrain the root layout div so flex-1 can trigger overflow */
+          body > div {
+            height: 100dvh !important;
+            max-height: 100dvh !important;
+            display: flex;
+            flex-direction: column;
+          }
         `}} />
         <div className="relative font-sans flex-1 flex overflow-hidden bg-[#212121]">
           {/* OpenAI style sidebar */}
