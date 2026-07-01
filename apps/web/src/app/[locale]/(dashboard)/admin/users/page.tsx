@@ -44,10 +44,8 @@ export default async function AdminUsersPage() {
   }));
 
   // Find admins to mark them properly
-  const userMembers = await db.select().from(tenantMembers);
   initialUsers.forEach(u => {
-    const member = userMembers.find(m => m.userId === u.id);
-    if (member && member.role === "admin") {
+    if (u.email === process.env.ADMIN_EMAIL) {
       u.role = "admin";
     }
   });
