@@ -334,14 +334,15 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
   };
 
   return (
-    <div className="flex flex-col h-full w-full max-w-5xl mx-auto relative bg-transparent">
+    <div className="flex flex-col h-full w-full relative bg-transparent">
       
       <div className="flex items-center justify-center p-4">
         {error && <div className="bg-red-500/20 text-red-400 px-4 py-2 rounded-lg text-sm">{error}</div>}
       </div>
 
       {/* Chat History Area */}
-      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto pb-48 px-4 md:px-8 space-y-6 scroll-smooth scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto pb-48 w-full scroll-smooth scrollbar-thin scrollbar-thumb-white/20 hover:scrollbar-thumb-white/30 scrollbar-track-transparent">
+        <div className="max-w-5xl mx-auto w-full px-4 md:px-8 flex flex-col space-y-6 pt-4 min-h-full">
         {isInitialLoading ? (
           <div className="h-full flex flex-col items-center justify-center text-white/40 space-y-4">
             <Loader2 className="w-8 h-8 animate-spin" />
@@ -378,6 +379,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
             )}
           </>
         )}
+        </div>
       </div>
 
       {/* Bottom Input Area */}
