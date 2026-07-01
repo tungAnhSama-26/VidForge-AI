@@ -68,8 +68,8 @@ export default function GenerateMessage({
             <div className="flex flex-wrap gap-2">
               {msg.attachments.map((att, idx) => (
                 <div key={idx} className="relative rounded-lg overflow-hidden border border-white/20">
-                  {att.mimeType.startsWith("image/") ? (
-                    <img src={`data:${att.mimeType};base64,${att.data}`} alt="attachment" className="w-32 h-32 object-cover" />
+                  {att.mimeType?.startsWith("image/") || (att.type && att.type.startsWith("image")) ? (
+                    <img src={`data:${att.mimeType || 'image/jpeg'};base64,${att.data}`} alt="attachment" className="w-32 h-32 object-cover" />
                   ) : (
                     <div className="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
                       <FileText className="w-6 h-6 text-blue-400" />
