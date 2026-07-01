@@ -45,7 +45,7 @@ export default async function AdminUsersPage() {
 
   // Find admins to mark them properly
   initialUsers.forEach(u => {
-    if (u.email === process.env.ADMIN_EMAIL) {
+    if (u.email?.toLowerCase().trim() === process.env.ADMIN_EMAIL?.toLowerCase().trim()) {
       u.role = "admin";
     }
   });

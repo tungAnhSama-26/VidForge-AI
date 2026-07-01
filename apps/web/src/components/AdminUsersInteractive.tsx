@@ -137,7 +137,7 @@ function InfoRow({
 }
 
 export default function AdminUsersInteractive({ initialUsers }: { initialUsers: any[] }) {
-  const [users] = useState(initialUsers);
+  const users = initialUsers;
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [roleFilter, setRoleFilter] = useState("all");
