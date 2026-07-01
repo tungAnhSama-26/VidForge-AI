@@ -89,7 +89,7 @@ export default function Sidebar({ role, user }: SidebarProps) {
       )}
 
       {/* Sidebar Content */}
-      <aside className={`w-[280px] bg-[#0a0a0a] border-r border-white/10 flex flex-col h-full fixed md:sticky top-0 z-[100] md:z-auto transition-transform duration-300 ease-in-out shrink-0 ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
+      <aside className={`w-[280px] bg-[#0a0a0a] border-r border-white/10 flex flex-col h-[100dvh] md:h-screen fixed md:relative top-0 left-0 z-[100] md:z-auto transition-transform duration-300 ease-in-out shrink-0 ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
         
         {/* Mobile Close Button */}
         <div className="md:hidden absolute -right-12 top-4">

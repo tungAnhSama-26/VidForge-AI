@@ -58,6 +58,7 @@ export default function GenerateInteractive({ sessionId: initialSessionId }: { s
               text: m.content,
               script: m.script,
               images: m.images,
+              attachments: m.attachments,
             })));
           }
         })

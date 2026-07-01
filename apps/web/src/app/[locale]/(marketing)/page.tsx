@@ -26,19 +26,25 @@ export default async function Home({
     const sessionId = typeof resolvedSearchParams?.sessionId === 'string' ? resolvedSearchParams.sessionId : undefined;
     
     return (
-      <div className="relative font-sans h-screen pt-16 flex overflow-hidden bg-[#212121]">
-        {/* OpenAI style sidebar */}
-        <ChatSidebar currentSessionId={sessionId} />
-        
-        {/* Chat Area */}
-        <div className="relative z-10 flex-1 w-full overflow-hidden flex flex-col">
-          <div className="absolute inset-0 z-0">
-            <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none animate-pulse-slow" />
-            <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-pink-600/10 blur-[150px] rounded-full pointer-events-none animate-float-delayed" />
+      <>
+        <style dangerouslySetInnerHTML={{ __html: `
+          footer { display: none !important; }
+          html, body { overflow: hidden !important; }
+        `}} />
+        <div className="relative font-sans flex-1 flex overflow-hidden bg-[#212121]">
+          {/* OpenAI style sidebar */}
+          <ChatSidebar currentSessionId={sessionId} />
+          
+          {/* Chat Area */}
+          <div className="relative z-10 flex-1 w-full overflow-hidden flex flex-col">
+            <div className="absolute inset-0 z-0">
+              <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none animate-pulse-slow" />
+              <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-pink-600/10 blur-[150px] rounded-full pointer-events-none animate-float-delayed" />
+            </div>
+            <GenerateInteractive sessionId={sessionId} />
           </div>
-          <GenerateInteractive sessionId={sessionId} />
         </div>
-      </div>
+      </>
     );
   }
 
