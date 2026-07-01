@@ -185,7 +185,6 @@ export default async function AdminDashboardPage({
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
-            <p className="text-white/60">Tổng quan hệ thống và chỉ số hiệu suất</p>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/admin/config" className="p-2 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-colors">

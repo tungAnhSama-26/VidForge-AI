@@ -214,7 +214,6 @@ export default function AdminUsersInteractive({ initialUsers }: { initialUsers: 
         {/* Screen Title */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Quản lý người dùng</h1>
-          <p className="text-white/60">Quản lý danh sách, vai trò và trạng thái của người dùng trong hệ thống</p>
         </div>
 
         {/* Top Bar */}

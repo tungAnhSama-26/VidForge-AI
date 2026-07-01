@@ -192,7 +192,6 @@ export default function AdminConfigInteractive({ initialConfig }: { initialConfi
           <Settings className="w-8 h-8 text-purple-400" />
           Cấu hình Hệ thống
         </h1>
-        <p className="text-white/50">Quản lý kết nối API, giới hạn hệ thống và các cài đặt toàn cục</p>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">

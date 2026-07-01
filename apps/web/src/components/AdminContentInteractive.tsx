@@ -220,7 +220,6 @@ export default function AdminContentInteractive({ initialItems }: { initialItems
         {/* Screen Title */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Quản lý nội dung</h1>
-          <p className="text-white/60">Xem và quản lý các kịch bản, video được tạo bởi người dùng</p>
         </div>
 
         {/* Top Bar */}
